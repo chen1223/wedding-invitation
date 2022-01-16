@@ -38,3 +38,8 @@ declare const isClicked: any;
 declare const isTouch: any;
 declare const color: any;
 declare const onClick: any;
+declare const drawText: any;
+declare const rgb: any;
+declare const loadFont: any;
+declare const drawSprite: any;
+declare const onDraw: any;

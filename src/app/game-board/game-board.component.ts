@@ -8,6 +8,7 @@ import { loadTurtle } from './../shared/turtle';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { R3TargetBinder } from '@angular/compiler';
 
 declare const origin: any;
 
@@ -57,10 +58,19 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   endGameSignal$ = new Subject<void>();
   onDestroy$ = new Subject<void>();
 
+  q4Status$ = new Subject<string>();
+
+  q4Trigger = {
+    q41: false,
+    q42: false,
+    q43: false
+  };
+
   constructor(private router: Router) { }
 
   ngOnInit(): void {
     this.init();
+    this.loadFont();
     loadEvilMushroom();
     loadTurtle();
     loadCharacter();
@@ -79,11 +89,15 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     });
   }
 
+  loadFont(): void {
+    loadFont('test', '/assets/fonts/noto.png', 64, 64);
+  }
+
   // Start Scene
   addStartScene(): void {
     scene('start', () => {
       add([
-        text('Welcome to Ailen and Bill\'s Wedding Invitation Game\n\nClick on Start to begin', {
+        text('Welcome to Aileen and Bill\'s Wedding Invitation Game\n\nClick on Start to begin', {
           size: 32,
           width: Math.floor(width() * .9)
         }),
@@ -100,7 +114,6 @@ export class GameBoardComponent implements OnInit, OnDestroy {
         color(255, 255, 255),
         'start-title'
       ]);
-
       onClick('start-title', () => {
         go('game', { level: 'q1', score: 0, isBig: false });
       });
@@ -126,60 +139,79 @@ export class GameBoardComponent implements OnInit, OnDestroy {
       const scoreXPos = width() - this.scoreLabel.width - 10;
       const scoreYPos = 10;
       this.scoreLabel.moveTo(scoreXPos, scoreYPos);
-      // Add attendee label for Q4 only
-      let labelOptions;
-      if (gameConfig.level === 'q4') {
-        labelOptions = {
-          attendeeLabel: null,
-          vegeLabel: null,
-          chairLabel: null
-        };
-        labelOptions.attendeeLabel = add([
-          text(`${this.surveyAnsers.q4.a1}`, { size: labelFontSize }),
-          scale(BASE_SCALE / 2),
-          area(),
-          pos(0, 0),
-          fixed(),
-          layer('ui')
-        ]);
-        if (labelOptions.attendeeLabel) {
-          const attendeeXPos = 10 + (labelOptions.attendeeLabel as any).width / 2;
-          const attendeeYPos = this.scoreLabel.pos.y;
-          (labelOptions.attendeeLabel as any).moveTo(attendeeXPos, attendeeYPos);
-        }
-        labelOptions.vegeLabel = add([
-          text(`${this.surveyAnsers.q4.a2}`, { size: labelFontSize }),
-          scale(BASE_SCALE / 2),
-          fixed(),
-          pos(0, 0),
-          fixed(),
-          area(),
-          layer('ui')
-        ]);
-        if (labelOptions.vegeLabel) {
-          const vegeXPos = (labelOptions.attendeeLabel as any).pos.x;
-          const vegeYPos = (labelOptions.attendeeLabel as any).pos.y + (labelOptions.attendeeLabel as any).height;
-          (labelOptions.vegeLabel as any).moveTo(vegeXPos, vegeYPos);
-        }
-        labelOptions.chairLabel = add([
-          text(`${this.surveyAnsers.q4.a3}`, { size: labelFontSize }),
-          scale(BASE_SCALE / 2),
-          fixed(),
-          pos(850, 150),
-          area(),
-          layer('ui')
-        ]);
-        if (labelOptions.chairLabel) {
-          const chairXPos = (labelOptions.vegeLabel as any).pos.x;
-          const chairYPos = (labelOptions.vegeLabel as any).pos.y + (labelOptions.vegeLabel as any).height;
-          (labelOptions.chairLabel as any).moveTo(chairXPos, chairYPos);
-        }
-      }
       const config = getSpriteConfig(BASE_SCALE, this.scoreLabel);
       const map = maps[gameConfig.level];
       this.gameBoard = addLevel(map, config);
-      const player = addCharacter(this.endGameSignal$, gameConfig.level, gameConfig.isBig, 80, 0, this.gameBoard, this.scoreLabel, this.surveyAnsers, labelOptions);
-      this.mushroomWalk();
+      const player = addCharacter(gameConfig.level, gameConfig.isBig, 80, 0, this.gameBoard, this.scoreLabel, this.surveyAnsers, this.q4Status$, this.endGameSignal$);
+
+      this.q4Status$.pipe(takeUntil(this.onDestroy$)).subscribe(state => {
+        switch (state) {
+          case 'q4-1-start': {
+            this.q4Trigger.q41 = true;
+            break;
+          }
+          case 'q4-1-end': {
+            this.q4Trigger.q41 = false;
+            break;
+          }
+          case 'q4-2-start': {
+            this.q4Trigger.q42 = true;
+            break;
+          }
+          case 'q4-2-end': {
+            this.q4Trigger.q42 = false;
+            break;
+          }
+          case 'q4-3-start': {
+            this.q4Trigger.q43 = true;
+            break;
+          }
+          case 'q4-3-end': {
+            this.q4Trigger.q43 = false;
+            break;
+          }
+        }
+      });
+      onDraw(() => {
+        if (gameConfig.level === 'q4') {
+          if (this.q4Trigger.q41) {
+            drawSprite({
+              sprite: 'q4-1',
+              pos: vec2(1800, 100),
+              width: 150
+            });
+            drawText({
+              text: this.surveyAnsers.q4.a1.toString(),
+              size: 48,
+              pos: vec2(2000, 100)
+            });
+          }
+          if (this.q4Trigger.q42) {
+            drawSprite({
+              sprite: 'q4-2',
+              pos: vec2(3600, 100),
+              width: 150
+            });
+            drawText({
+              text: this.surveyAnsers.q4.a2.toString(),
+              size: 48,
+              pos: vec2(3800, 100)
+            });
+          }
+          if (this.q4Trigger.q43) {
+            drawSprite({
+              sprite: 'q4-3',
+              pos: vec2(4800, 600),
+              width: 150
+            });
+            drawText({
+              text: this.surveyAnsers.q4.a3.toString(),
+              size: 48,
+              pos: vec2(5000, 600)
+            });
+          }
+        }
+      });
     });
   }
 
@@ -187,16 +219,10 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     return layers(['bg', 'obj', 'ui'], 'obj');
   }
 
-  mushroomWalk(): void {
-    // action('mushroom', (m: any) => {
-    //   m.move(MUSHROOM_SPEED, 0);
-    // });
-  }
-
   regEndGame(): void {
     this.endGameSignal$.pipe(takeUntil(this.onDestroy$)).subscribe(() => {
       localStorage.setItem('gameAnswer', JSON.stringify(this.surveyAnsers));
-      this.router.navigateByUrl('final');
+      this.router.navigateByUrl('confirm');
     });
   }
 

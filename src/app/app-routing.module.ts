@@ -5,7 +5,7 @@ import { SurveyComponent } from './survey/survey.component';
 
 const routes: Routes = [
   {
-    path: 'final',
+    path: 'confirm',
     component: SurveyComponent
   },
   {

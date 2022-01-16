@@ -1,1 +1,167 @@
-<p>survey works!</p>
+<div class="page-container">
+  <div class="inner-page-wrapper">
+    <!-- Hero Image Section -->
+    <section class="hero-section">
+      <h1 class="title">
+        <span class="__part1">感謝您的填寫，請核對您的回覆</span>
+        <span class="__part2">並協助填寫剩下的問卷</span>
+      </h1>
+      <img class="hero-img" src="/assets/img/bride_and-bridegroom.png" alt="bride and bridegroom">
+    </section><!-- End of hero image section -->
+
+    <!-- Form Section -->
+    <section class="form-section">
+      <form class="survey-form" [formGroup]="surveyForm" (ngSubmit)="submitForm()">
+        <!-- Location info -->
+        <div class="location-info">
+          <!-- Time -->
+          <div class="row --time">
+            <label for="time" class="ctrl-title">時間：</label>
+            <label id="time" class="ctrl">2022/10/08 11:00 ~ 15:00</label>
+          </div><!-- End of time -->
+
+          <!-- Entrance time -->
+          <div class="row --entrance">
+            <label for="entrance" class="ctrl-title">賓客進場時間：</label>
+            <label id="entrance" class="ctrl">10:30 ~ 11:30</label>
+          </div><!-- End of entrance time -->
+
+          <!-- Location -->
+          <div class="row --location">
+            <label for="location" class="ctrl-title">地點：</label>
+            <label id="location" class="ctrl">台北市中山區植福路 8 號 （大直典華 SKY1）</label>
+          </div><!-- End of location -->
+        </div><!-- End of location info -->
+
+        <!-- Name -->
+        <div class="row --name required">
+          <label for="name" class="ctrl-title">您的名字是</label>
+          <input type="text" class="ctrl" id="name" formControlName="name">
+        </div><!-- End of name -->
+
+        <!-- Guest from -->
+        <div class="row --guest-from required">
+          <label for="guest-from" class="ctrl-title">您是</label>
+          <div class="radio-group-wrapper ctrl">
+            <div class="radio-option">
+              <input id="bridegroom" type="radio" class="radio-input" formControlName="guestFrom" value="bridegroom">
+              <label for="bridegroom" class="radio-text">男方親友</label>
+            </div>
+            <div class="radio-option">
+              <input id="bride" type="radio" class="radio-input" formControlName="guestFrom" value="bride">
+              <label for="bride" class="radio-text">女方親友</label>
+            </div>
+          </div>
+        </div><!-- End of guest from -->
+
+        <!-- Relation -->
+        <div class="row --guest-from required">
+          <label for="guest-from" class="ctrl-title">和新人的關係</label>
+          <div class="radio-group-wrapper ctrl">
+            <div class="radio-option">
+              <input id="family" type="radio" class="radio-input" formControlName="relation" value="family">
+              <label for="family" class="radio-text">親戚</label>
+            </div>
+            <div class="radio-option">
+              <input id="classmate" type="radio" class="radio-input" formControlName="relation" value="classmate">
+              <label for="classmate" class="radio-text">同學</label>
+            </div>
+            <div class="radio-option">
+              <input id="colleague" type="radio" class="radio-input" formControlName="relation" value="work colleague">
+              <label for="colleague" class="radio-text">同事</label>
+            </div>
+            <div class="radio-option">
+              <input id="other" type="radio" class="radio-input" formControlName="relation" value="other">
+              <label for="other" class="radio-text">其他</label>
+            </div>
+          </div>
+        </div><!-- End of relation -->
+
+        <!-- Attend -->
+        <div class="row --attend required">
+          <label for="attend" class="ctrl-title">請問您是否出席</label>
+          <div class="radio-group-wrapper ctrl">
+            <div class="radio-option">
+              <input id="yes" type="radio" class="radio-input" formControlName="attend" value="Yes" (change)="onAttendChange()">
+              <label for="yes" class="radio-text">當然！</label>
+            </div>
+            <div class="radio-option">
+              <input id="no" type="radio" class="radio-input" formControlName="attend" value="No" (change)="onAttendChange()">
+              <label for="no" class="radio-text">很遺憾無法參加</label>
+            </div>
+          </div>
+        </div><!-- End of attend -->
+
+        <!-- Attend no -->
+        <div class="row --attend-no required">
+          <label for="attend-no" class="ctrl-title">出席人數</label>
+          <input type="text" class="ctrl" id="attend-no" formControlName="attendNo">
+        </div><!-- End of attend no -->
+
+        <!-- Vegetarian no -->
+        <div class="row --vege-no required">
+          <label for="vege-no" class="ctrl-title">吃素人數</label>
+          <input type="text" class="ctrl" id="vege-no" formControlName="vegeNo">
+        </div><!-- End of vegetarian no -->
+
+        <!-- Child seat no -->
+        <div class="row --child-chair required">
+          <label for="child-chair" class="ctrl-title">兒童座椅數</label>
+          <input type="text" class="ctrl" id="child-chair" formControlName="childSeatNo">
+        </div>
+
+        <!-- Invitation type -->
+        <div class="row --invitation-type required">
+          <label for="invitation-type" class="ctrl-title">希望收到的喜帖類型</label>
+          <div class="radio-group-wrapper ctrl">
+            <div class="radio-option">
+              <input id="paper" type="radio" class="radio-input" formControlName="invitationType" value="paper" (change)="onInvitationTypeChange()">
+              <label for="paper" class="radio-text">紙本</label>
+            </div>
+            <div class="radio-option">
+              <input id="digital" type="radio" class="radio-input" formControlName="invitationType" value="digital" (change)="onInvitationTypeChange()">
+              <label for="digital" class="radio-text">電子檔</label>
+            </div>
+            <div class="radio-option">
+              <input id="skip" type="radio" class="radio-input" formControlName="invitationType" value="skip" (change)="onInvitationTypeChange()">
+              <label for="skip" class="radio-text">不需要喜帖</label>
+            </div>
+          </div>
+        </div><!-- End of invitation type -->
+
+        <!-- Address -->
+        <div class="row --address required">
+          <label for="address" class="ctrl-title">喜帖收件地址</label>
+          <input type="text" class="ctrl" id="address" formControlName="address">
+        </div><!-- End of address -->
+
+        <!-- Phone -->
+        <div class="row --address required">
+          <label for="phone" class="ctrl-title">連絡電話</label>
+          <input type="text" class="ctrl" id="phone" formControlName="phone">
+        </div><!-- End of phone -->
+
+        <!-- Email -->
+        <div class="row --email required">
+          <label for="email" class="ctrl-title">信箱</label>
+          <input type="text" class="ctrl" id="email" formControlName="email">
+        </div><!-- End of email -->
+
+        <!-- Note -->
+        <div class="row --note">
+          <label for="note" class="ctrl-title">想說的話</label>
+          <textarea class="ctrl" name="note" id="note" cols="30" rows="5" formControlName="note"></textarea>
+        </div><!-- End of note -->
+
+        <!-- Submit button -->
+        <button class="submit-btn" type="submit">送出</button>
+      </form>
+      <figure class="decor --top-right"></figure>
+      <figure class="decor --mid-right"></figure>
+      <figure class="decor --bot-left"></figure>
+    </section><!-- End of survey form -->
+    <figure class="decor --footer">
+      <img src="/assets/img/baloon_couple.png" alt="couple with baloon" class="baloon">
+    </figure>
+  </div>
+</div>

@@ -94,6 +94,13 @@ export function loadSprites(): void {
     }
   });
   loadSprite('mushroom', '/assets/img/mushroom.png');
+  /*** Location Info Sprites ***/
+  loadSprite('date-title', '/assets/img/info/date-title.png');
+  loadSprite('date', '/assets/img/info/date.png');
+  loadSprite('entrance-title', '/assets/img/info/entrance-title.png');
+  loadSprite('entrance', '/assets/img/info/entrance.png');
+  loadSprite('location-title', '/assets/img/info/location-title.png');
+  loadSprite('location', '/assets/img/info/location.png');
   /*** Question 1 Spirtes ***/
   loadSprite('q1', '/assets/img/question/q1.png');
   loadSprite('q1a', '/assets/img/question/q1a.png');
@@ -109,8 +116,18 @@ export function loadSprites(): void {
   loadSprite('q3a', '/assets/img/question/q3a.png');
   loadSprite('q3b', '/assets/img/question/q3b.png');
   /*** Question 4 Sprites ***/
+  loadSpriteAtlas('/assets/img/world.png', {
+    'q4-1-brick': {
+      x: 48,
+      y: 0,
+      sliceX: 8,
+      sliceY: 8,
+      width: 128,
+      height: 128
+    }
+  });
   loadSprite('q4-1', '/assets/img/question/q4-1.png');
-  loadSprite('q4-2', '/assets/img/question/q4-2.png');
+  loadSprite('q4-2', '/assets/img/question/q4-2-b.png');
   loadSprite('q4-3', '/assets/img/question/q4-3.png');
   loadSprite('q4a', '/assets/img/question/q4a.png');
   loadSprite('q4b', '/assets/img/question/q4b.png');
@@ -159,7 +176,7 @@ export function getSpriteConfig(BASE_SCALE: number, scoreLabel: any) {
     ']': () => [sprite('pipe-br'), solid(), area(), scale(BASE_SCALE)],
     // Option a pipe
     '~': () => [sprite('pipe-tl'), solid(), area(), scale(BASE_SCALE), 'pipe', 'pipe-a'],
-    '_': () => [sprite('pipe-tr'), solid(), area(), scale(BASE_SCALE), 'pipe', 'pipe-b'],
+    '_': () => [sprite('pipe-tr'), solid(), area(), scale(BASE_SCALE), 'pipe', 'pipe-a'],
     // Option b pipe
     '+': () => [sprite('pipe-tl'), solid(), area(), scale(BASE_SCALE), 'pipe', 'pipe-b'],
     '"': () => [sprite('pipe-tr'), solid(), area(), scale(BASE_SCALE), 'pipe', 'pipe-b'],
@@ -169,27 +186,45 @@ export function getSpriteConfig(BASE_SCALE: number, scoreLabel: any) {
     // Option d pipe
     '{': () => [sprite('pipe-tl'), solid(), area(), scale(BASE_SCALE), 'pipe', 'pipe-d'],
     '}': () => [sprite('pipe-tr'), solid(), area(), scale(BASE_SCALE), 'pipe', 'pipe-d'],
+    /*** Location Info Resources ***/
+    'D': () => [sprite('date-title'), scale(BASE_SCALE / 4)],
+    'd': () => [sprite('date'), scale(BASE_SCALE / 4)],
+    'E': () => [sprite('entrance-title'), scale(BASE_SCALE / 4)],
+    'e': () => [sprite('entrance'), scale(BASE_SCALE / 4)],
+    'L': () => [sprite('location-title'), scale(BASE_SCALE / 4)],
+    'l': () => [sprite('location'), scale(BASE_SCALE / 4)],
+
     /*** Question 1 Resources ***/
-    '-': () => [sprite('q1'), scale(BASE_SCALE / 2)],
+    '-': () => [sprite('q1'), scale(BASE_SCALE / 4)],
     '1': () => [sprite('q1a'), scale(BASE_SCALE / 4)],
     '2': () => [sprite('q1b'), scale(BASE_SCALE / 4)],
 
     /*** Question 2 Resources ***/
-    '@': () => [sprite('q2'), scale(BASE_SCALE / 2)],
-    '/': () => [sprite('q2a', scale(BASE_SCALE / 4))],
-    '\\': () => [sprite('q2b', scale(BASE_SCALE / 4))],
-    '|': () => [sprite('q2c', scale(BASE_SCALE / 4))],
-    '!': () => [sprite('q2d', scale(BASE_SCALE / 4))],
+    '@': () => [sprite('q2'), scale(BASE_SCALE / 4)],
+    '/': () => [sprite('q2a'), scale(BASE_SCALE / 4)],
+    '\\': () => [sprite('q2b'), scale(BASE_SCALE / 4)],
+    '|': () => [sprite('q2c'), scale(BASE_SCALE / 4)],
+    '!': () => [sprite('q2d'), scale(BASE_SCALE / 4)],
 
     /*** Question 3 Resources ***/
-    '#': () => [sprite('q3'), scale(BASE_SCALE / 2)],
-    'e': () => [sprite('q3a'), scale(BASE_SCALE / 4)],
-    'd': () => [sprite('q3b'), scale(BASE_SCALE / 4)],
+    '#': () => [sprite('q3'), scale(BASE_SCALE / 4)],
+    'a': () => [sprite('q3a'), scale(BASE_SCALE / 4)],
+    'w': () => [sprite('q3b'), scale(BASE_SCALE / 4)],
 
     /*** Question 4 Resources ***/
-    '%': () => [sprite('q4-1'), scale(BASE_SCALE / 2)],
-    'I': () => [sprite('q4-2'), scale(BASE_SCALE / 2)],
-    'O': () => [sprite('q4-3'), scale(BASE_SCALE / 2)],
+    // Q4 1 Triggers
+    '4': () => [sprite('brick'), scale(BASE_SCALE), solid(), area(), 'q4-1-start'],
+    'j': () => [sprite('brick'), scale(BASE_SCALE), solid(), area(), 'q4-1-end'],
+    // Q4 2 Triggers
+    'k': () => [sprite('brick'), scale(BASE_SCALE), solid(), area(), 'q4-2-start'],
+    'n': () => [sprite('brick'), scale(BASE_SCALE), solid(), area(), 'q4-2-end'],
+    // Q4 3 Triggers
+    'p': () => [sprite('brick'), scale(BASE_SCALE), solid(), area(), 'q4-3-start'],
+    'z': () => [sprite('brick'), scale(BASE_SCALE), solid(), area(), 'q4-3-end'],
+
+    '%': () => [sprite('q4-1'), scale(BASE_SCALE)],
+    'I': () => [sprite('q4-2'), scale(BASE_SCALE)],
+    'O': () => [sprite('q4-3'), scale(BASE_SCALE / 4)],
     'y': () => [sprite('q4a'), scale(BASE_SCALE / 4)],
     'x': () => [sprite('q4b'), scale(BASE_SCALE / 4)],
     '>': () => [sprite('question'), solid(), area(), scale(BASE_SCALE), 'add-attendee'],
@@ -200,9 +235,9 @@ export function getSpriteConfig(BASE_SCALE: number, scoreLabel: any) {
     '6': () => [sprite('question'), solid(), area(), scale(BASE_SCALE), 'minus-chair'],
 
     /*** Question 5 Resources **/
-    '&': () => [sprite('q5'), scale(BASE_SCALE / 2)],
-    'r': () => [sprite('q5a', scale(BASE_SCALE / 4))],
-    'f': () => [sprite('q5b', scale(BASE_SCALE / 4))],
-    's': () => [sprite('q5c', scale(BASE_SCALE / 4))],
+    '&': () => [sprite('q5'), scale(BASE_SCALE / 4)],
+    'r': () => [sprite('q5a'), scale(BASE_SCALE / 4)],
+    'f': () => [sprite('q5b'), scale(BASE_SCALE / 4)],
+    's': () => [sprite('q5c'), scale(BASE_SCALE / 4)],
   };
 };

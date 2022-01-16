@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { SurveyAnser } from '../game-board/game-board.component';
 import { addKey, loadArrowSprites } from './arrow';
 
-const JUMP_FORCE = 600;
+const JUMP_FORCE = 620;
 const BIG_JUMP_FORCE = 700;
 let CURRENT_JUMP_FORCE = JUMP_FORCE;
 const FALL_DEATH = 900;
@@ -154,7 +154,7 @@ function determineKey(touchEvent: any, arrowUp: any, arrowDown: any, arrowRight:
   return null;
 }
 
-export function addCharacter(endGameSignal$: Subject<void>, currentLevel: string, initBig: boolean, initX: number, initY: number, gameBoard: any, scoreLabel: any, surveyAnswer: SurveyAnser, labelOptions?: any) {
+export function addCharacter(currentLevel: string, initBig: boolean, initX: number, initY: number, gameBoard: any, scoreLabel: any, surveyAnswer: SurveyAnser, q4Status$: Subject<string>, endGameSignal$: Subject<void>) {
   const SPEED = 360;
   let isBig = initBig;
   let canSmash = true;
@@ -193,7 +193,6 @@ export function addCharacter(endGameSignal$: Subject<void>, currentLevel: string
     });
 
     document.addEventListener('touchend', event => {
-      console.log('touchend', event);
       for (let i = 0; i < event.changedTouches.length; i++) {
         const touchEvent = event.changedTouches[i];
         const keyRelease = determineKey(touchEvent, arrowUp, arrowDown, arrowRight, arrowLeft);
@@ -339,27 +338,21 @@ export function addCharacter(endGameSignal$: Subject<void>, currentLevel: string
     } else if (obj.is('add-attendee')) {
       // Increase attendee by 1
       surveyAnswer.q4.a1 = surveyAnswer.q4.a1 < 5 ? surveyAnswer.q4.a1 += 1 : surveyAnswer.q4.a1;
-      labelOptions.attendeeLabel.text = `${surveyAnswer.q4.a1}`;
     } else if (obj.is('minus-attendee')) {
       // Decrease attendee by 1
       surveyAnswer.q4.a1 = surveyAnswer.q4.a1 > 0 ?  surveyAnswer.q4.a1 -= 1 : 0;
-      labelOptions.attendeeLabel.text = `${surveyAnswer.q4.a1}`;
     } else if (obj.is('add-vegan')) {
       // Increase vegan by 1
       surveyAnswer.q4.a2 = surveyAnswer.q4.a2 < surveyAnswer.q4.a1 ? surveyAnswer.q4.a2 += 1 : surveyAnswer.q4.a2;
-      labelOptions.vegeLabel.text = `${surveyAnswer.q4.a2}`;
     } else if (obj.is('minus-vegan')) {
       // Decrease vegan by 1
       surveyAnswer.q4.a2 = surveyAnswer.q4.a2 > 0 ?  surveyAnswer.q4.a2 -= 1 : 0;
-      labelOptions.vegeLabel.text = `${surveyAnswer.q4.a2}`;
     } else if (obj.is('add-chair')) {
       // Increase children chair by 1
       surveyAnswer.q4.a3 = surveyAnswer.q4.a3 < (surveyAnswer.q4.a1 - 1) ? surveyAnswer.q4.a3 += 1 : surveyAnswer.q4.a3;
-      labelOptions.chairLabel.text = `${surveyAnswer.q4.a3}`;
     } else if (obj.is('minus-chair')) {
       // Decrease children chair by 1
       surveyAnswer.q4.a3 = surveyAnswer.q4.a3 > 0 ?  surveyAnswer.q4.a3 -= 1 : 0;
-      labelOptions.chairLabel.text = `${surveyAnswer.q4.a3}`;
     }
   });
 
@@ -391,7 +384,7 @@ export function addCharacter(endGameSignal$: Subject<void>, currentLevel: string
   });
 
   // Collide with Evil Shrrom
-  mario.onCollide('evil-mushroom', (e: any) => {
+  mario.onCollide('evil-mushroom', (e: any, side: any) => {
     if (!e.isAlive) {
       return;
     }
@@ -399,7 +392,7 @@ export function addCharacter(endGameSignal$: Subject<void>, currentLevel: string
     if ((mario.lastCollide + 2) >= currentTime && mario.lastCollide !== null) {
       return;
     }
-    if (canSmash) {
+    if (side.isBottom()) {
       e.smash();
       scoreLabel.value += 20;
       scoreLabel.text = String(scoreLabel.value).padStart(3, '0');
@@ -424,7 +417,7 @@ export function addCharacter(endGameSignal$: Subject<void>, currentLevel: string
     if ((mario.lastCollide + 2) >= currentTime && mario.lastCollide !== null) {
       return;
     }
-    if (canSmash) {
+    if (side.isBottom()) {
       // Walking
       if (!t.isShell) {
         t.smash();
@@ -486,12 +479,13 @@ export function addCharacter(endGameSignal$: Subject<void>, currentLevel: string
           // Option A
           if (pipe.is('pipe-a')) {
             surveyAnswer.q3 = 'A';
+            go('game', { level: 'q4', score: scoreLabel.value, isBig });
           } else {
             // Option B
             surveyAnswer.q3 = 'B';
+            go('game', { level: 'q5', score: scoreLabel.value, isBig });
           }
           console.log('survey answers:', surveyAnswer);
-          endGameSignal$.next();
           break;
         }
         case 'q4': {
@@ -523,6 +517,31 @@ export function addCharacter(endGameSignal$: Subject<void>, currentLevel: string
         }
       }, 50);
     });
+  });
+
+  /***
+   * Add Q4 triggers
+   **/
+  // Add Q4-1 title
+  mario.onCollide('q4-1-start', () => {
+    q4Status$.next('q4-1-start');
+  });
+  mario.onCollide('q4-1-end', () => {
+    q4Status$.next('q4-1-end');
+  });
+  // Add Q4-2 title
+  mario.onCollide('q4-2-start', () => {
+    q4Status$.next('q4-2-start');
+  });
+  mario.onCollide('q4-2-end', () => {
+    q4Status$.next('q4-2-end');
+  });
+  // Add Q4-3 title
+  mario.onCollide('q4-3-start', () => {
+    q4Status$.next('q4-3-start');
+  });
+  mario.onCollide('q4-3-end', () => {
+    q4Status$.next('q4-3-end');
   });
   return mario;
 }

@@ -1,13 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+
 * {
   box-sizing: border-box;
+  font-family: 'Noto Sans TC', 'Poppins', sans-serif;
+  --primary-color-light: #FFF5F7;
+  --primary-color: #FFC7C7;
+  --text-color: #3C3A52;
+  --action-btn-color: #2D2C2C;
+  --action-btn-text-color: #F6EFEF;
+  --required-color: #EF3838;
+  --input-bg-white: #FFF9F9;
+
+  --radio-btn-size: 15px;
 }
 
 html, body {
   margin: 0;
+  font-size: 16px;
 }
 
+/*** Default styles for Mobile Devices ***/
 body {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   transform: translate3d(0, 0, 0,);
 }
 
+h1 {
+  font-size: 20px;
+  margin: 20px 0;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+span, label, input, textarea {
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+input, textarea {
+  border-radius: 4px;
+  border: none;
+  background: var(--input-bg-white);
+  padding: 0.5rem;
+  font-size: 1rem;
+  position: relative;
+  z-index: 2;
+}
+textarea {
+  resize: none;
+}
+
+button {
+  padding: 0.25rem 1rem;
+}
+
+.radio-group-wrapper {
+  .radio-option {
+    display: inline-flex;
+    margin-right: 10px;
+    align-items: center;
+    input[type="radio"] {
+      margin-left: 0;
+      margin-right: 5px;
+      width: var(--radio-btn-size);
+      height: var(--radio-btn-size);
+    }
+  }
+}
+
+@media (orientation: portrait) {
+  /*** Small Tablet Devices ***/
+  @media (min-width: 768px) and (max-width: 967px) {
+    * {
+      --radio-btn-size: 20px;
+    }
+    body {
+      font-size: 20px;
+    }
+    h1 {
+      font-size: 40px;
+    }
+  }
+  /*** Tablet Devices ***/
+  @media (min-width: 968px) and (max-width: 1023px) {
+    * {
+      --radio-btn-size: 20px;
+    }
+    body {
+      font-size: 20px;
+    }
+    h1 {
+      font-size: 40px;
+    }
+  }
+  /*** Large Tablet Devices ***/
+  @media (min-width: 1024px) and (max-width: 1199px) {
+    * {
+      --radio-btn-size: 20px;
+    }
+    body {
+      font-size: 20px;
+    }
+    h1 {
+      font-size: 40px;
+    }
+  }
+  /*** Desktop Devices ***/
+  @media (min-width: 1200px) {
+    * {
+      --radio-btn-size: 20px;
+    }
+    body {
+      font-size: 28px;
+    }
+    h1 {
+      font-size: 70px;
+    }
+  }
+}
+@media (orientation: landscape) {
+  /*** Mobile Devices ***/
+  @media (max-height: 480px) {
+    html {
+      font-size: 20px;
+    }
+    button {
+      padding: 0.5rem 1rem;
+    }
+  }
+  @media (min-height: 481px) and (max-height: 767px) {
+    html {
+      font-size: 20px;
+    }
+    h1 {
+      font-size: 2rem;
+    }
+  }
+  /*** Small Tablet Devices ***/
+  @media (min-height: 768px) and (max-height: 967px) {
+    * {
+      --radio-btn-size: 20px;
+    }
+    html {
+      font-size: 20px;
+    }
+    h1 {
+      font-size: 40px;
+    }
+    input, textarea {
+      padding: 0.75rem 1rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+    }
+  }
+  /*** Tablet Devices ***/
+  @media (min-height: 968px) and (max-height: 1023px) {
+    * {
+      --radio-btn-size: 20px;
+    }
+    html {
+      font-size: 24px;
+    }
+    h1 {
+      font-size: 2.25rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+    }
+  }
+  /*** Large Tablet Devices ***/
+  @media (min-height: 1024px) {
+    * {
+      --radio-btn-size: 20px;
+    }
+    html {
+      font-size: 24px;
+    }
+    h1 {
+      font-size: 2.25rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+    }
+  }
+}
