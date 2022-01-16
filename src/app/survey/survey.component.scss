@@ -211,6 +211,9 @@
         margin-top: -20px;
       }
     }
+    .submit-btn {
+      max-width: 300px;
+    }
   }
   /*** Large Tablet Devices ***/
   @media (min-width: 1024px) and (max-width: 1199px) {
@@ -247,6 +250,9 @@
         margin-left: 10%;
         margin-top: -20px;
       }
+    }
+    .submit-btn {
+      max-width: 300px;
     }
   }
   /*** Desktop Devices ***/
