@@ -43,3 +43,5 @@ declare const rgb: any;
 declare const loadFont: any;
 declare const drawSprite: any;
 declare const onDraw: any;
+declare const onTouchStart: any;
+declare const onTouchEnd: any;

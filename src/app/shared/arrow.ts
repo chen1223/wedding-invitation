@@ -27,6 +27,7 @@ export function addKey(spriteName: string, x: number, y: number) {
     opacity(0.5),
     scale(1),
     arrow(),
+    area(),
     // body(),
     // origin('bot'),
     // area({ width: 32 }),

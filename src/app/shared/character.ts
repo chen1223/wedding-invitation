@@ -6,7 +6,7 @@ import { addKey, loadArrowSprites } from './arrow';
 const JUMP_FORCE = 620;
 const BIG_JUMP_FORCE = 700;
 let CURRENT_JUMP_FORCE = JUMP_FORCE;
-const FALL_DEATH = 900;
+const FALL_DEATH = 1500;
 
 function healthStatus() {
   return {
@@ -441,6 +441,7 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
     }
   });
 
+
   // Go into Pipe
   mario.onCollide('pipe', (pipe: any) => {
     keyPress('down', () => {
@@ -512,11 +513,71 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
     const listener = document.addEventListener('touchstart', () => {
       setTimeout(() => {
         if (arrowDown.isPressed) {
-          go('game', { level: 'level2', score: scoreLabel.value, isBig });
-          document.removeEventListener('touchstart', () => {});
+          switch (currentLevel) {
+            // Guest From
+            case 'q1': {
+              // Option A Bridegroom
+              if (pipe.is('pipe-a')) {
+                surveyAnswer.q1 = 'A';
+              } else {
+                // Option B Bride
+                surveyAnswer.q1 = 'B';
+              }
+              go('game', { level: 'q2', score: scoreLabel.value, isBig });
+              break;
+            }
+            // Relation
+            case 'q2': {
+              // Option A Family
+              if (pipe.is('pipe-a')) {
+                surveyAnswer.q2 = 'A';
+              } else if (pipe.is('pipe-b')) {
+                // Option B Classmate
+                surveyAnswer.q2 = 'B';
+              } else if (pipe.is('pipe-c')) {
+                // Option C Work Colleague
+                surveyAnswer.q2 = 'C';
+              } else {
+                // Option D Other
+                surveyAnswer.q2 = 'D';
+              }
+              go('game', { level: 'q3', score: scoreLabel.value, isBig });
+              break;
+            }
+            // Attend
+            case 'q3': {
+              // Option A Yes
+              if (pipe.is('pipe-a')) {
+                surveyAnswer.q3 = 'A';
+                go('game', { level: 'q4', score: scoreLabel.value, isBig });
+              } else {
+                // Option B No
+                surveyAnswer.q3 = 'B';
+                go('game', { level: 'q5', score: scoreLabel.value, isBig });
+              }
+              break;
+            }
+            case 'q4': {
+              go('game', { level: 'q5', score: scoreLabel.value, isBig });
+              break;
+            }
+            case 'q5': {
+              // Option A
+              if (pipe.is('pipe-a')) {
+                surveyAnswer.q5 = 'A';
+              } else if (pipe.is('pipe-b')) {
+                // Option B
+                surveyAnswer.q5 = 'B';
+              } else if (pipe.is('pipe-c')) {
+                // Option C
+                surveyAnswer.q5  = 'C';
+              }
+              endGameSignal$.next();
+            }
+          }
         }
       }, 50);
-    });
+    }, { once: true });
   });
 
   /***
