@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { getSpriteConfig } from '../shared/sprite-mapping';
 import { maps } from '../shared/map';
 import { loadSprites } from './../shared/sprite-mapping';
-import { addCharacter, loadCharacter } from '../shared/character';
+import { addCharacter, loadCharacter, registerTouchEvent } from '../shared/character';
 import { loadEvilMushroom } from './../shared/evil-shroom';
 import { loadTurtle } from './../shared/turtle';
 import { Subject } from 'rxjs';
@@ -70,6 +70,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.init();
+    registerTouchEvent();
     this.loadFont();
     loadEvilMushroom();
     loadTurtle();
@@ -106,7 +107,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
         area(),
         color(255, 255, 255),
       ]);
-      add([
+      const startTitle = add([
         text('Start', { size: 48, font: 'apl386o' }),
         pos(vec2(width() / 2, height() / 2 + 150)),
         origin('center'),
@@ -117,6 +118,12 @@ export class GameBoardComponent implements OnInit, OnDestroy {
       onClick('start-title', () => {
         go('game', { level: 'q1', score: 0, isBig: false });
       });
+      onTouchStart((event: any, pos: any) => {
+        if (pos.x >= startTitle.pos.x - startTitle.width/2 && pos.x <= (startTitle.pos.x + startTitle.width/2) &&
+            pos.y >= startTitle.pos.y - startTitle.height/2 && pos.y <= (startTitle.pos.y + startTitle.height/2)) {
+          go('game', { level: 'q1', score: 0, isBig: false });
+        }
+      })
     });
     go('start');
   }

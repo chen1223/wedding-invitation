@@ -1,5 +1,6 @@
 declare const origin: any;
 import { Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { SurveyAnser } from '../game-board/game-board.component';
 import { addKey, loadArrowSprites } from './arrow';
 
@@ -113,105 +114,164 @@ export function loadCharacter(): void {
   }
 }
 
-function determineKey(touchEvent: any, arrowUp: any, arrowDown: any, arrowRight: any, arrowLeft: any): string | null {
-  const touchX = touchEvent.clientX;
-  const touchY = touchEvent.clientY;
-  // Determine if the Up key is clicked
+let arrowUp: any;
+let arrowDown: any;
+let arrowRight: any;
+let arrowLeft: any;
+
+const switchLevel$ = new Subject<void>();
+const downTouch$ = new Subject<void>();
+
+const touchDirection: { [key: string]: boolean } = {
+  up: false,
+  down: false,
+  left: false,
+  right: false
+};
+
+// Hold a list of touch points
+let touchPoints: Array<Touch> = [];
+
+function determineKey(touchEvent: Touch): string | null {
+  if (!arrowUp || !arrowDown || !arrowRight || !arrowLeft) {
+    return null;
+  }
   const upXStart = arrowUp.pos.x;
   const upXEnd = arrowUp.pos.x + arrowUp.width;
   const upYStart = arrowUp.pos.y;
   const upYEnd = arrowUp.pos.y + arrowUp.height;
-  if (touchX >= upXStart && touchX <= upXEnd && touchY >= upYStart && touchY <= upYEnd ) {
-    return 'up';
-  }
 
   // Determine if the Down key is clicked
   const downXStart = arrowDown.pos.x;
   const downXEnd = arrowDown.pos.x + arrowDown.width;
   const downYStart = arrowDown.pos.y;
   const downYEnd = arrowDown.pos.y + arrowDown.height;
-  if (touchX >= downXStart && touchX <= downXEnd && touchY >= downYStart && touchY <= downYEnd ) {
-    return 'down';
-  }
+
 
   // Determine if the Right key is clicked
   const rightXStart = arrowRight.pos.x;
   const rightXEnd = arrowRight.pos.x + arrowRight.width;
   const rightYStart = arrowRight.pos.y;
   const rightYEnd = arrowRight.pos.y + arrowRight.height;
-  if (touchX >= rightXStart && touchX <= rightXEnd && touchY >= rightYStart && touchY <= rightYEnd ) {
-    return 'right';
-  }
 
   // Determine if the Left key is clicked
   const leftXStart = arrowLeft.pos.x;
   const lefttXEnd = arrowLeft.pos.x + arrowLeft.width;
   const leftYStart = arrowLeft.pos.y;
   const leftYEnd = arrowLeft.pos.y + arrowLeft.height;
+
+  const touchX = touchEvent.pageX;
+  const touchY = touchEvent.pageY;
+  // Determine if the Up key is clicked
+  if (touchX >= upXStart && touchX <= upXEnd && touchY >= upYStart && touchY <= upYEnd ) {
+    return 'up';
+  }
+
+  // Determine if the Down key is clicked
+  if (touchX >= downXStart && touchX <= downXEnd && touchY >= downYStart && touchY <= downYEnd ) {
+    return 'down';
+  }
+
+  // Determine if the Right key is clicked
+  if (touchX >= rightXStart && touchX <= rightXEnd && touchY >= rightYStart && touchY <= rightYEnd ) {
+    return 'right';
+  }
+
+  // Determine if the Left key is clicked
   if (touchX >= leftXStart && touchX <= lefttXEnd && touchY >= leftYStart && touchY <= leftYEnd ) {
     return 'left';
   }
   return null;
 }
 
+function checkAllKeys(): void {
+  let leftTouched = false;
+  let rightTouched = false;
+  let upTouched = false;
+  let downTouched = false;
+  touchPoints.forEach(touch => {
+    const key = determineKey(touch);
+    switch (key) {
+      case 'left': {
+        leftTouched = true;
+        break;
+      }
+      case 'right': {
+        rightTouched = true;
+        break;
+      }
+      case 'up': {
+        upTouched = true;
+        break;
+      }
+      case 'down': {
+        downTouched = true;
+        break;
+      }
+    }
+  });
+  touchDirection.left = leftTouched;
+  touchDirection.right = rightTouched;
+  touchDirection.up = upTouched;
+  touchDirection.down = downTouched;
+}
+
+function handleTouch(event: TouchEvent) {
+  const changedTouch = event.changedTouches;
+  const index = touchPoints.map(record => record.identifier).indexOf(changedTouch.length === 1 ? changedTouch[0].identifier : changedTouch[changedTouch.length - 1].identifier);
+  const key = determineKey(changedTouch[0]);
+  switch (event.type) {
+    case 'touchstart': {
+      touchPoints.push(changedTouch[0]);
+      if (key) {
+      }
+      if (key === 'down') {
+        downTouch$.next();
+      }
+      break;
+    }
+    case 'touchend': {
+      if (index > -1) {
+        touchPoints.splice(index, 1);
+      }
+      break;
+    }
+    case 'touchcancel': {
+      if (index > -1) {
+        touchPoints.splice(index, 1);
+      }
+      break;
+    }
+  }
+}
+
+export function registerTouchEvent(): void {
+  if (!isTouch()) {
+    return;
+  }
+  document.addEventListener('touchstart', handleTouch, false);
+  document.addEventListener('touchend', handleTouch, false);
+  document.addEventListener('touchcancel', handleTouch, false);
+}
+
 export function addCharacter(currentLevel: string, initBig: boolean, initX: number, initY: number, gameBoard: any, scoreLabel: any, surveyAnswer: SurveyAnser, q4Status$: Subject<string>, endGameSignal$: Subject<void>) {
   const SPEED = 360;
   let isBig = initBig;
   let canSmash = true;
-
-  let arrowUp: any;
-  let arrowDown: any;
-  let arrowRight: any;
-  let arrowLeft: any;
-
   const onMobileLandscape = window.matchMedia('(orientation: landscape)').matches && window.innerHeight < 750;
+
+  switchLevel$.pipe(take(1)).subscribe(() => {
+    touchDirection.top = false;
+    touchDirection.down = false;
+    touchDirection.right = false;
+    touchDirection.left = false;
+  });
 
   if (isTouch()) {
     arrowUp = addKey('arrow-up', width() - 70, height() - 100);
     arrowDown = addKey('arrow-down', 95, height() - 70);
     arrowRight = addKey('arrow-right', 145, height() - 100);
     arrowLeft = addKey('arrow-left', 20, height() - 100);
-    document.addEventListener('touchstart', (event) => {
-      for (let i = 0; i < event.touches.length; i++) {
-        const touchEvent = event.touches[i];
-        const keyTouched = determineKey(touchEvent, arrowUp, arrowDown, arrowRight, arrowLeft);
-        switch (keyTouched) {
-          case 'up':
-            arrowUp.isPressed = true;
-            break;
-          case 'down':
-            arrowDown.isPressed = true;
-            break;
-          case 'right':
-            arrowRight.isPressed = true;
-            break;
-          case 'left':
-            arrowLeft.isPressed = true;
-            break;
-        }
-      }
-    });
-
-    document.addEventListener('touchend', event => {
-      for (let i = 0; i < event.changedTouches.length; i++) {
-        const touchEvent = event.changedTouches[i];
-        const keyRelease = determineKey(touchEvent, arrowUp, arrowDown, arrowRight, arrowLeft);
-        switch (keyRelease) {
-          case 'up':
-            arrowUp.isPressed = false;
-            break;
-          case 'down':
-            arrowDown.isPressed = false;
-            break;
-          case 'right':
-            arrowRight.isPressed = false;
-            break;
-          case 'left':
-            arrowLeft.isPressed = false;
-            break;
-        }
-      }
-    });
   }
 
   const mario = add([
@@ -228,14 +288,18 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
   mario.play('idle--sm');
   mario.action(() => {
     camPos(mario.pos);
-    const left = isTouch() ? keyIsDown('left') || arrowLeft.isPressed : keyIsDown('left');
-    const right = isTouch() ? keyIsDown('right') || arrowRight.isPressed : keyIsDown('right');
-    const up = isTouch() ? keyIsDown('up') || arrowUp.isPressed : keyIsDown('up');
-    const down = isTouch() ? keyIsDown('down') || arrowDown.isPressed : keyIsDown('down');
+    const left = keyIsDown('left') || touchDirection.left;
+    const right = keyIsDown('right') || touchDirection.right;
+    const up = keyIsDown('up') || touchDirection.up;
+    const down = keyIsDown('down') || touchDirection.down;
     const currAnim = mario.curAnim();
 
     if (mario.grounded()) {
       canSmash = false;
+    }
+
+    if (isTouch()) {
+      checkAllKeys();
     }
 
     // Detect fall
@@ -441,10 +505,12 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
     }
   });
 
+  const collidePipe$ = new Subject<void>();
 
   // Go into Pipe
   mario.onCollide('pipe', (pipe: any) => {
-    keyPress('down', () => {
+    collidePipe$.next();
+    function enterPipe(currentLevel: string, score: any, isBig: boolean, surveyAnswer: SurveyAnser): void {
       switch (currentLevel) {
         case 'q1': {
           // Option A
@@ -509,75 +575,15 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
           endGameSignal$.next();
         }
       }
+    }
+    keyPress('down', () => {
+      switchLevel$.next();
+      enterPipe(currentLevel, scoreLabel.value, isBig, surveyAnswer);
     });
-    const listener = document.addEventListener('touchstart', () => {
-      setTimeout(() => {
-        if (arrowDown.isPressed) {
-          switch (currentLevel) {
-            // Guest From
-            case 'q1': {
-              // Option A Bridegroom
-              if (pipe.is('pipe-a')) {
-                surveyAnswer.q1 = 'A';
-              } else {
-                // Option B Bride
-                surveyAnswer.q1 = 'B';
-              }
-              go('game', { level: 'q2', score: scoreLabel.value, isBig });
-              break;
-            }
-            // Relation
-            case 'q2': {
-              // Option A Family
-              if (pipe.is('pipe-a')) {
-                surveyAnswer.q2 = 'A';
-              } else if (pipe.is('pipe-b')) {
-                // Option B Classmate
-                surveyAnswer.q2 = 'B';
-              } else if (pipe.is('pipe-c')) {
-                // Option C Work Colleague
-                surveyAnswer.q2 = 'C';
-              } else {
-                // Option D Other
-                surveyAnswer.q2 = 'D';
-              }
-              go('game', { level: 'q3', score: scoreLabel.value, isBig });
-              break;
-            }
-            // Attend
-            case 'q3': {
-              // Option A Yes
-              if (pipe.is('pipe-a')) {
-                surveyAnswer.q3 = 'A';
-                go('game', { level: 'q4', score: scoreLabel.value, isBig });
-              } else {
-                // Option B No
-                surveyAnswer.q3 = 'B';
-                go('game', { level: 'q5', score: scoreLabel.value, isBig });
-              }
-              break;
-            }
-            case 'q4': {
-              go('game', { level: 'q5', score: scoreLabel.value, isBig });
-              break;
-            }
-            case 'q5': {
-              // Option A
-              if (pipe.is('pipe-a')) {
-                surveyAnswer.q5 = 'A';
-              } else if (pipe.is('pipe-b')) {
-                // Option B
-                surveyAnswer.q5 = 'B';
-              } else if (pipe.is('pipe-c')) {
-                // Option C
-                surveyAnswer.q5  = 'C';
-              }
-              endGameSignal$.next();
-            }
-          }
-        }
-      }, 50);
-    }, { once: true });
+    downTouch$.pipe(take(1), takeUntil(collidePipe$), takeUntil(switchLevel$)).subscribe(() => {
+      switchLevel$.next();
+      enterPipe(currentLevel, scoreLabel.value, isBig, surveyAnswer);
+    })
   });
 
   /***
