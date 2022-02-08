@@ -546,7 +546,7 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
           // Option A
           if (pipe.is('pipe-a')) {
             surveyAnswer.q3 = 'A';
-            go('game', { level: 'q4', score: scoreLabel.value, isBig });
+            go('game', { level: 'q41', score: scoreLabel.value, isBig });
           } else {
             // Option B
             surveyAnswer.q3 = 'B';
@@ -555,7 +555,21 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
           console.log('survey answers:', surveyAnswer);
           break;
         }
-        case 'q4': {
+        case 'q41': {
+          console.log('survey answers:', surveyAnswer);
+          if (surveyAnswer.q4.a1 === 0) {
+            go('game', { level: 'q5', score: scoreLabel.value, isBig });
+          } else {
+            go('game', { level: 'q42', score: scoreLabel.value, isBig });
+          }
+          break;
+        }
+        case 'q42': {
+          console.log('survey answers:', surveyAnswer);
+          go('game', { level: 'q43', score: scoreLabel.value, isBig });
+          break;
+        }
+        case 'q43': {
           console.log('survey answers:', surveyAnswer);
           go('game', { level: 'q5', score: scoreLabel.value, isBig });
           break;

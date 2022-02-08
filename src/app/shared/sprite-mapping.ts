@@ -127,7 +127,7 @@ export function loadSprites(): void {
     }
   });
   loadSprite('q4-1', '/assets/img/question/q4-1.png');
-  loadSprite('q4-2', '/assets/img/question/q4-2-b.png');
+  loadSprite('q4-2', '/assets/img/question/q4-2.png');
   loadSprite('q4-3', '/assets/img/question/q4-3.png');
   loadSprite('q4a', '/assets/img/question/q4a.png');
   loadSprite('q4b', '/assets/img/question/q4b.png');

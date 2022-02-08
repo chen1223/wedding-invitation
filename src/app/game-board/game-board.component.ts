@@ -180,43 +180,39 @@ export class GameBoardComponent implements OnInit, OnDestroy {
         }
       });
       onDraw(() => {
-        if (gameConfig.level === 'q4') {
-          if (this.q4Trigger.q41) {
-            drawSprite({
-              sprite: 'q4-1',
-              pos: vec2(1800, 100),
-              width: 150
-            });
-            drawText({
-              text: this.surveyAnsers.q4.a1.toString(),
-              size: 48,
-              pos: vec2(2000, 100)
-            });
-          }
-          if (this.q4Trigger.q42) {
-            drawSprite({
-              sprite: 'q4-2',
-              pos: vec2(3600, 100),
-              width: 150
-            });
-            drawText({
-              text: this.surveyAnsers.q4.a2.toString(),
-              size: 48,
-              pos: vec2(3800, 100)
-            });
-          }
-          if (this.q4Trigger.q43) {
-            drawSprite({
-              sprite: 'q4-3',
-              pos: vec2(4800, 600),
-              width: 150
-            });
-            drawText({
-              text: this.surveyAnsers.q4.a3.toString(),
-              size: 48,
-              pos: vec2(5000, 600)
-            });
-          }
+        if (gameConfig.level === 'q41' && this.q4Trigger.q41) {
+          drawSprite({
+            sprite: 'q4-1',
+            pos: vec2(1800, 100),
+            width: 150
+          });
+          drawText({
+            text: this.surveyAnsers.q4.a1.toString(),
+            size: 48,
+            pos: vec2(2000, 100)
+          });
+        } else if (gameConfig.level === 'q42' && this.q4Trigger.q42) {
+          drawSprite({
+            sprite: 'q4-2',
+            pos: vec2(1200, 100),
+            width: 150
+          });
+          drawText({
+            text: this.surveyAnsers.q4.a2.toString(),
+            size: 48,
+            pos: vec2(1400, 100)
+          });
+        } else if (gameConfig.level === 'q43' && this.q4Trigger.q43) {
+          drawSprite({
+            sprite: 'q4-3',
+            pos: vec2(1200, 100),
+            width: 150
+          });
+          drawText({
+            text: this.surveyAnsers.q4.a3.toString(),
+            size: 48,
+            pos: vec2(1400, 100)
+          });
         }
       });
     });
