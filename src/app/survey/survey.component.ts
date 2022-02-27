@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SurveyAnser } from '../game-board/game-board.component';
+import { SurveyAnswer } from '../game-board/game-board.component';
+import { ApiService } from '../shared/api.service';
 import { Attend, GuestFrom, InvitationType, Relation } from '../shared/survey.model';
+import { SurveyResult } from './../game-board/game-board.component';
 
 @Component({
   selector: 'app-survey',
@@ -11,7 +13,7 @@ import { Attend, GuestFrom, InvitationType, Relation } from '../shared/survey.mo
 })
 export class SurveyComponent implements OnInit {
 
-  surveyAnswers: SurveyAnser = {
+  surveyAnswers: SurveyAnswer = {
     q1: null,
     q2: null,
     q3: null,
@@ -38,10 +40,16 @@ export class SurveyComponent implements OnInit {
     note: [null]
   });
 
-  constructor(private fb: FormBuilder) { }
+  score = 0;
+
+  constructor(
+    private fb: FormBuilder,
+    private apiService: ApiService,) { }
 
   ngOnInit(): void {
     this.loadAnswers();
+    const currentScore = localStorage.getItem('maxScore') || 0;
+    this.score = +currentScore;
   }
 
   loadAnswers(): void {
@@ -177,6 +185,30 @@ export class SurveyComponent implements OnInit {
   // Submit form
   submitForm(): void {
     const data = this.surveyForm.getRawValue();
-    console.log('data', data);
+    const body: SurveyResult = {
+      guestName: data.name,
+      guestFrom: data.guestFrom,
+      relation: data.relation,
+      attend: data.attend,
+      attendNo: data.attendNo,
+      vegeNo: data.vegeNo,
+      childSeatNo: data.childSeatNo,
+      invitationType: data.invitationType,
+      address: data.address,
+      phone: data.phone,
+      email: data.email,
+      note: data.note,
+      score: this.score.toString(),
+    };
+    console.log('data', data, this.score, body);
+    this.apiService.saveForm(body).subscribe(
+      res => {
+        const msg = res.msg;
+        console.log(msg);
+      },
+      err => {
+        console.error('Something went wrong, please try again later');
+      }
+    );
   }
 }

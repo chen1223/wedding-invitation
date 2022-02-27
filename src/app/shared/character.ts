@@ -1,7 +1,7 @@
 declare const origin: any;
 import { Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-import { SurveyAnser } from '../game-board/game-board.component';
+import { SurveyAnswer } from '../game-board/game-board.component';
 import { addKey, loadArrowSprites } from './arrow';
 
 const JUMP_FORCE = 620;
@@ -254,7 +254,7 @@ export function registerTouchEvent(): void {
   document.addEventListener('touchcancel', handleTouch, false);
 }
 
-export function addCharacter(currentLevel: string, initBig: boolean, initX: number, initY: number, gameBoard: any, scoreLabel: any, surveyAnswer: SurveyAnser, q4Status$: Subject<string>, endGameSignal$: Subject<void>) {
+export function addCharacter(currentLevel: string, initBig: boolean, initX: number, initY: number, gameBoard: any, scoreLabel: any, surveyAnswer: SurveyAnswer, q4Status$: Subject<string>, endGameSignal$: Subject<void>) {
   const SPEED = 360;
   let isBig = initBig;
   let canSmash = true;
@@ -510,7 +510,7 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
   // Go into Pipe
   mario.onCollide('pipe', (pipe: any) => {
     collidePipe$.next();
-    function enterPipe(currentLevel: string, score: any, isBig: boolean, surveyAnswer: SurveyAnser): void {
+    function enterPipe(currentLevel: string, score: any, isBig: boolean, surveyAnswer: SurveyAnswer): void {
       switch (currentLevel) {
         case 'q1': {
           // Option A

@@ -15,13 +15,29 @@ declare const origin: any;
 const BASE_SCALE = 2;
 const MUSHROOM_SPEED = 50;
 
+export interface SurveyResult {
+  guestName: string;
+  guestFrom: string;
+  relation: string;
+  attend: string;
+  attendNo: string;
+  vegeNo: string;
+  childSeatNo: string;
+  invitationType: string;
+  address: string;
+  phone: string;
+  email: string;
+  note: string;
+  score: string;
+}
+
 export interface GameOption {
   level: string;
   score: number;
   isBig: boolean;
 }
 
-export interface SurveyAnser {
+export interface SurveyAnswer {
   q1: 'A' | 'B' | null,
   q2: 'A' | 'B' | 'C' | 'D' | null,
   q3: 'A' | 'B' | null,
@@ -43,7 +59,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   score = 0;
   scoreLabel: any;
 
-  surveyAnsers: SurveyAnser = {
+  SurveyAnswers: SurveyAnswer = {
     q1: null,
     q2: null,
     q3: null,
@@ -143,13 +159,14 @@ export class GameBoardComponent implements OnInit, OnDestroy {
           value: gameConfig.score
         }
       ]);
+      this.score = gameConfig.score;
       const scoreXPos = width() - this.scoreLabel.width - 10;
       const scoreYPos = 10;
       this.scoreLabel.moveTo(scoreXPos, scoreYPos);
       const config = getSpriteConfig(BASE_SCALE, this.scoreLabel);
       const map = maps[gameConfig.level];
       this.gameBoard = addLevel(map, config);
-      const player = addCharacter(gameConfig.level, gameConfig.isBig, 80, 0, this.gameBoard, this.scoreLabel, this.surveyAnsers, this.q4Status$, this.endGameSignal$);
+      const player = addCharacter(gameConfig.level, gameConfig.isBig, 80, 0, this.gameBoard, this.scoreLabel, this.SurveyAnswers, this.q4Status$, this.endGameSignal$);
 
       this.q4Status$.pipe(takeUntil(this.onDestroy$)).subscribe(state => {
         switch (state) {
@@ -187,7 +204,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
             width: 150
           });
           drawText({
-            text: this.surveyAnsers.q4.a1.toString(),
+            text: this.SurveyAnswers.q4.a1.toString(),
             size: 48,
             pos: vec2(2000, 100)
           });
@@ -198,7 +215,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
             width: 150
           });
           drawText({
-            text: this.surveyAnsers.q4.a2.toString(),
+            text: this.SurveyAnswers.q4.a2.toString(),
             size: 48,
             pos: vec2(1400, 100)
           });
@@ -209,7 +226,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
             width: 150
           });
           drawText({
-            text: this.surveyAnsers.q4.a3.toString(),
+            text: this.SurveyAnswers.q4.a3.toString(),
             size: 48,
             pos: vec2(1400, 100)
           });
@@ -224,7 +241,12 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   regEndGame(): void {
     this.endGameSignal$.pipe(takeUntil(this.onDestroy$)).subscribe(() => {
-      localStorage.setItem('gameAnswer', JSON.stringify(this.surveyAnsers));
+      localStorage.setItem('gameAnswer', JSON.stringify(this.SurveyAnswers));
+      // Update highest score
+      const lastScore = localStorage.getItem('maxScore') || 0;
+      if (this.score > +lastScore) {
+        localStorage.setItem('maxScore', this.score.toString());
+      }
       this.router.navigateByUrl('confirm');
     });
   }

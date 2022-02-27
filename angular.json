@@ -76,6 +76,11 @@
             },
             "development": {
               "browserTarget": "wedding-invitation:build:development"
+            },
+            "options": {
+              "sslKey": "../ca.key",
+              "sslCert": "../ca.crt",
+              "proxyConfig": "./proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
