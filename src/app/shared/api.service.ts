@@ -11,6 +11,8 @@ export interface SaveResponse {
 export interface Ranking {
   name: string;
   score: string;
+  minutes?: string;
+  seconds?: string;
 }
 
 @Injectable({

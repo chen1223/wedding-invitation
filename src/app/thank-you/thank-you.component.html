@@ -13,6 +13,7 @@
           <span class="--ranking">排名</span>
           <span class="--player">玩家</span>
           <span class="--score">總分</span>
+          <span class="--time">花費時間</span>
         </li>
         <li
           class="rank-item"
@@ -21,6 +22,7 @@
           <span class="--ranking">{{ i + 1 }}</span>
           <span class="--player">{{ record.name }}</span>
           <span class="--score">{{ record.score | number: '1.0-0' }}</span>
+          <span class="--time">{{ record.minutes ? record.minutes + ' 分 ' + record.seconds + ' 秒' : record.seconds + ' 秒' }}</span>
         </li>
       </ul>
     </section><!-- End of ranking section -->

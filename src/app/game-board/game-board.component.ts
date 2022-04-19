@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { R3TargetBinder } from '@angular/compiler';
+import * as moment from 'moment';
 
 declare const origin: any;
 
@@ -29,6 +30,7 @@ export interface SurveyResult {
   email: string;
   note: string;
   score: string;
+  timeFinish: string;
 }
 
 export interface GameOption {
@@ -82,13 +84,14 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     q43: false
   };
 
+  startTime: moment.Moment | null = null;
+
   constructor(private router: Router) { }
 
   ngOnInit(): void {
     this.init();
-    this.loadBackground();
+    // this.loadBackground();
     registerTouchEvent();
-    this.loadFont();
     loadEvilMushroom();
     loadTurtle();
     loadCharacter();
@@ -103,8 +106,9 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     kaboom({
       width: window.innerWidth,
       height: window.innerHeight,
-      background: [255, 221, 223, 1]
+      background: [255, 221, 223, 1],
     });
+
   }
 
   async loadBackground() {
@@ -121,10 +125,6 @@ export class GameBoardComponent implements OnInit, OnDestroy {
       width() / bgImg.tex.width,
       height() / bgImg.tex.height
     ));
-  }
-
-  loadFont(): void {
-    loadFont('test', '/assets/fonts/noto.png', 64, 64);
   }
 
   // Start Scene
@@ -149,9 +149,11 @@ export class GameBoardComponent implements OnInit, OnDestroy {
         'start-title'
       ]);
       onClick('start-title', () => {
+        this.startTime = moment();
         go('game', { level: 'q1', score: 0, isBig: false });
       });
       onTouchStart((event: any, pos: any) => {
+        this.startTime = moment();
         if (pos.x >= startTitle.pos.x - startTitle.width/2 && pos.x <= (startTitle.pos.x + startTitle.width/2) &&
             pos.y >= startTitle.pos.y - startTitle.height/2 && pos.y <= (startTitle.pos.y + startTitle.height/2)) {
           go('game', { level: 'q1', score: 0, isBig: false });
@@ -159,6 +161,10 @@ export class GameBoardComponent implements OnInit, OnDestroy {
       })
     });
     go('start');
+  }
+
+  addLayer(): void {
+    return layers(['bg', 'obj', 'ui'], 'obj');
   }
 
   addGameScene(): void {
@@ -183,7 +189,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
       const config = getSpriteConfig(BASE_SCALE, this.scoreLabel);
       const map = maps[gameConfig.level];
       this.gameBoard = addLevel(map, config);
-      this.loadBackground();
+      // this.loadBackground();
       const player = addCharacter(gameConfig.level, gameConfig.isBig, 1000, 0, this.gameBoard, this.scoreLabel, this.SurveyAnswers, this.q4Status$, this.endGameSignal$);
 
       this.q4Status$.pipe(takeUntil(this.onDestroy$)).subscribe(state => {
@@ -253,10 +259,6 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     });
   }
 
-  addLayer(): void {
-    return layers(['bg', 'obj', 'ui'], 'obj');
-  }
-
   regEndGame(): void {
     this.endGameSignal$.pipe(takeUntil(this.onDestroy$)).subscribe(() => {
       localStorage.setItem('gameAnswer', JSON.stringify(this.SurveyAnswers));
@@ -265,6 +267,9 @@ export class GameBoardComponent implements OnInit, OnDestroy {
       if (this.score > +lastScore) {
         localStorage.setItem('maxScore', this.score.toString());
       }
+      const finishTime = moment();
+      const duration = moment.duration(finishTime.diff(this.startTime));
+      sessionStorage.setItem('duration', Math.floor(duration.asSeconds()).toString());
       this.router.navigateByUrl('confirm');
     });
   }

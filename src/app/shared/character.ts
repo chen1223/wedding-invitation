@@ -316,7 +316,11 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
     } else if (mario.pos.x < 1000) {
       mario.pos.x = 1000;
     }
-    camPos(mario.pos.x, mario.pos.y)
+    if (isTouch()) {
+      camPos(mario.pos.x, height() < 400 ? mario.pos.y : 300);
+    } else {
+      camPos(mario.pos.x, mario.height + 72);
+    }
     const left = keyIsDown('left') || touchDirection.left;
     const right = keyIsDown('right') || touchDirection.right;
     const up = keyIsDown('up') || touchDirection.up;

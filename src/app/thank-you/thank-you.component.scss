@@ -48,6 +48,13 @@
   .--player {
     flex: 4;
   }
+  .--score {
+    flex: 1;
+  }
+  .--time {
+    width: 120px;
+    text-align: right;
+  }
 }
 .rank-item {
   position: relative;

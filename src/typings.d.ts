@@ -46,3 +46,8 @@ declare const drawSprite: any;
 declare const onDraw: any;
 declare const onTouchStart: any;
 declare const onTouchEnd: any;
+declare const cleanup: any;
+declare const fullscreen: any;
+declare const isFullscreen: any;
+declare const onKeyPress: any;
+declare const camScale: any;

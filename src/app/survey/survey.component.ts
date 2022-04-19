@@ -195,6 +195,7 @@ export class SurveyComponent implements OnInit {
       window.confirm('請確實填入所有必填欄位唷');
       return;
     }
+    const duration = sessionStorage.getItem('duration');
     const data = this.surveyForm.getRawValue();
     const body: SurveyResult = {
       guestName: data.name,
@@ -210,19 +211,17 @@ export class SurveyComponent implements OnInit {
       email: data.email,
       note: data.note,
       score: this.score.toString(),
+      timeFinish: duration || ''
     };
-    console.log('data', data, this.score, body);
-    sessionStorage.setItem('currentUser', data.name);
-    this.router.navigateByUrl('thankyou');
-    // this.apiService.saveForm(body).subscribe(
-    //   res => {
-    //     const msg = res.msg;
-    //     console.log(msg);
-    //     this.router.navigate(['thankyou', { currentUser: data.name }]);
-    //   },
-    //   err => {
-    //     console.error('Something went wrong, please try again later');
-    //   }
-    // );
+    this.apiService.saveForm(body).subscribe(
+      res => {
+        const msg = res.msg;
+        sessionStorage.setItem('currentUser', data.name);
+        this.router.navigateByUrl('thankyou');
+      },
+      err => {
+        console.error('Something went wrong, please try again later');
+      }
+    );
   }
 }
