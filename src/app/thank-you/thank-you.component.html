@@ -1,0 +1,28 @@
+<div class="page-container">
+  <div class="inner-page-wrapper">
+    <!-- Hero Image Section -->
+    <section class="hero-section">
+      <h1 class="title">我們收到您的回覆囉，感謝您的填寫!</h1>
+    </section><!-- End of hero image section -->
+
+    <!-- Ranking Section -->
+    <section class="ranking-section">
+      <h2 class="ranking-title">高手排行榜</h2>
+      <ul class="ranking">
+        <li class="rank-title">
+          <span class="--ranking">排名</span>
+          <span class="--player">玩家</span>
+          <span class="--score">總分</span>
+        </li>
+        <li
+          class="rank-item"
+          *ngFor="let record of ranking;index as i"
+          [id]="record.name === currentUser ? 'current' : ''">
+          <span class="--ranking">{{ i + 1 }}</span>
+          <span class="--player">{{ record.name }}</span>
+          <span class="--score">{{ record.score | number: '1.0-0' }}</span>
+        </li>
+      </ul>
+    </section><!-- End of ranking section -->
+  </div>
+</div>

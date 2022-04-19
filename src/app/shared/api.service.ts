@@ -8,6 +8,11 @@ export interface SaveResponse {
   msg: string;
 }
 
+export interface Ranking {
+  name: string;
+  score: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,5 +23,10 @@ export class ApiService {
   saveForm(formData: SurveyResult): Observable<SaveResponse> {
     const url = `${environment.domain}/save`;
     return this.http.post<SaveResponse>(url, formData);
+  }
+
+  getRanking(): Observable<Array<Ranking>> {
+    const url = `${environment.domain}/ranking`;
+    return this.http.get<Array<Ranking>>(url);
   }
 }

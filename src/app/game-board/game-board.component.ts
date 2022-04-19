@@ -39,7 +39,7 @@ export interface GameOption {
 
 export interface SurveyAnswer {
   q1: 'A' | 'B' | null,
-  q2: 'A' | 'B' | 'C' | 'D' | null,
+  q2: 'A' | 'B' | 'C' | 'D' | 'E' | null,
   q3: 'A' | 'B' | null,
   q4: {
     a1: number,
@@ -86,6 +86,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.init();
+    this.loadBackground();
     registerTouchEvent();
     this.loadFont();
     loadEvilMushroom();
@@ -102,8 +103,24 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     kaboom({
       width: window.innerWidth,
       height: window.innerHeight,
-      background: [0, 0, 0, 1]
+      background: [255, 221, 223, 1]
     });
+  }
+
+  async loadBackground() {
+    let bgImg = await loadSprite('background', '/assets/img/bg.png');
+    let background = add([
+      sprite('background'),
+      pos(width() / 2, height() / 2),
+      origin("center"),
+      scale(1),
+      layer('bg'),
+    ]);
+    // Scale the background to cover the screen
+    background.scaleTo(Math.max(
+      width() / bgImg.tex.width,
+      height() / bgImg.tex.height
+    ));
   }
 
   loadFont(): void {
@@ -166,7 +183,8 @@ export class GameBoardComponent implements OnInit, OnDestroy {
       const config = getSpriteConfig(BASE_SCALE, this.scoreLabel);
       const map = maps[gameConfig.level];
       this.gameBoard = addLevel(map, config);
-      const player = addCharacter(gameConfig.level, gameConfig.isBig, 80, 0, this.gameBoard, this.scoreLabel, this.SurveyAnswers, this.q4Status$, this.endGameSignal$);
+      this.loadBackground();
+      const player = addCharacter(gameConfig.level, gameConfig.isBig, 1000, 0, this.gameBoard, this.scoreLabel, this.SurveyAnswers, this.q4Status$, this.endGameSignal$);
 
       this.q4Status$.pipe(takeUntil(this.onDestroy$)).subscribe(state => {
         switch (state) {

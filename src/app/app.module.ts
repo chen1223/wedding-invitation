@@ -7,12 +7,14 @@ import { AppComponent } from './app.component';
 import { GameBoardComponent } from './game-board/game-board.component';
 import { SurveyComponent } from './survey/survey.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ThankYouComponent } from './thank-you/thank-you.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GameBoardComponent,
-    SurveyComponent
+    SurveyComponent,
+    ThankYouComponent
   ],
   imports: [
     BrowserModule,

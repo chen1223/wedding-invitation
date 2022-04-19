@@ -111,6 +111,7 @@ export function loadSprites(): void {
   loadSprite('q2b', '/assets/img/question/q2b.png');
   loadSprite('q2c', '/assets/img/question/q2c.png');
   loadSprite('q2d', '/assets/img/question/q2d.png');
+  loadSprite('q2e', '/assets/img/question/q2e.png');
   /*** Question 3 Sprites ***/
   loadSprite('q3', '/assets/img/question/q3.png');
   loadSprite('q3a', '/assets/img/question/q3a.png');
@@ -186,6 +187,9 @@ export function getSpriteConfig(BASE_SCALE: number, scoreLabel: any) {
     // Option d pipe
     '{': () => [sprite('pipe-tl'), solid(), area(), scale(BASE_SCALE), 'pipe', 'pipe-d'],
     '}': () => [sprite('pipe-tr'), solid(), area(), scale(BASE_SCALE), 'pipe', 'pipe-d'],
+    // Option e pipe
+    'm': () => [sprite('pipe-tl'), solid(), area(), scale(BASE_SCALE), 'pipe', 'pipe-d'],
+    'b': () => [sprite('pipe-tr'), solid(), area(), scale(BASE_SCALE), 'pipe', 'pipe-d'],
     /*** Location Info Resources ***/
     'D': () => [sprite('date-title'), scale(BASE_SCALE / 4)],
     'd': () => [sprite('date'), scale(BASE_SCALE / 4)],
@@ -205,6 +209,7 @@ export function getSpriteConfig(BASE_SCALE: number, scoreLabel: any) {
     '\\': () => [sprite('q2b'), scale(BASE_SCALE / 4)],
     '|': () => [sprite('q2c'), scale(BASE_SCALE / 4)],
     '!': () => [sprite('q2d'), scale(BASE_SCALE / 4)],
+    ')': () => [sprite('q2e'), scale(BASE_SCALE / 4)],
 
     /*** Question 3 Resources ***/
     '#': () => [sprite('q3'), scale(BASE_SCALE / 4)],

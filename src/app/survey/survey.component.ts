@@ -44,7 +44,9 @@ export class SurveyComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private apiService: ApiService,) { }
+    private apiService: ApiService,
+    private router: Router,
+    ) { }
 
   ngOnInit(): void {
     this.loadAnswers();
@@ -82,7 +84,12 @@ export class SurveyComponent implements OnInit {
         break;
       }
       case 'D': {
+        formData.relation = Relation.ROTARY_CLUB;
+        break;
+      }
+      case 'E': {
         formData.relation = Relation.OTHERS;
+        break;
       }
     }
     // Invitation Type
@@ -184,6 +191,10 @@ export class SurveyComponent implements OnInit {
 
   // Submit form
   submitForm(): void {
+    if (this.surveyForm.invalid) {
+      window.confirm('請確實填入所有必填欄位唷');
+      return;
+    }
     const data = this.surveyForm.getRawValue();
     const body: SurveyResult = {
       guestName: data.name,
@@ -201,14 +212,17 @@ export class SurveyComponent implements OnInit {
       score: this.score.toString(),
     };
     console.log('data', data, this.score, body);
-    this.apiService.saveForm(body).subscribe(
-      res => {
-        const msg = res.msg;
-        console.log(msg);
-      },
-      err => {
-        console.error('Something went wrong, please try again later');
-      }
-    );
+    sessionStorage.setItem('currentUser', data.name);
+    this.router.navigateByUrl('thankyou');
+    // this.apiService.saveForm(body).subscribe(
+    //   res => {
+    //     const msg = res.msg;
+    //     console.log(msg);
+    //     this.router.navigate(['thankyou', { currentUser: data.name }]);
+    //   },
+    //   err => {
+    //     console.error('Something went wrong, please try again later');
+    //   }
+    // );
   }
 }

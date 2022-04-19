@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  domain: 'https://ourwedding.aileen.billchen.cloud',
+  domain: 'https://api.ourwedding.aileen.billchen.cloud',
 };

@@ -18,8 +18,8 @@ function healthStatus() {
     update() {},
     sick() {
       this.isHealthy = false;
-      // (this as any).spriteID = 'sick-mario';
-      (this as any).use(sprite('sick-mario'))
+      // (this as any).spriteID = 'sick-bill';
+      (this as any).use(sprite('sick-bill'))
     },
     healthy() {
       this.isHealthy = true;
@@ -29,7 +29,7 @@ function healthStatus() {
 }
 
 export function loadCharacter(): void {
-  loadSpriteAtlas('/assets/img/mario-sprite.png', {
+  loadSpriteAtlas('/assets/img/bill-sprite.png', {
     'mario': {
       x: 0,
       y: 0,
@@ -69,8 +69,8 @@ export function loadCharacter(): void {
       }
     }
   });
-  loadSpriteAtlas('/assets/img/sick-mario-sprite.png', {
-    'sick-mario': {
+  loadSpriteAtlas('/assets/img/sick-bill-sprite.png', {
+    'sick-bill': {
       x: 0,
       y: 0,
       sliceX: 26,
@@ -287,7 +287,36 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
   // Initial animation
   mario.play('idle--sm');
   mario.action(() => {
-    camPos(mario.pos);
+    let maxPosX = width();
+    switch (currentLevel) {
+      case 'q1':
+        maxPosX = 2000;
+        break;
+      case 'q2':
+        maxPosX = 4200;
+        break;
+      case 'q3':
+        maxPosX = 4500;
+        break;
+      case 'q41':
+        maxPosX = 4200;
+        break;
+      case 'q43':
+        maxPosX = 3800;
+        break;
+      case 'q5':
+        maxPosX = 2800;
+        break;
+      default:
+        maxPosX = 3000;
+        break;
+    }
+    if (mario.pos.x > maxPosX) {
+      mario.pos.x = maxPosX;
+    } else if (mario.pos.x < 1000) {
+      mario.pos.x = 1000;
+    }
+    camPos(mario.pos.x, mario.pos.y)
     const left = keyIsDown('left') || touchDirection.left;
     const right = keyIsDown('right') || touchDirection.right;
     const up = keyIsDown('up') || touchDirection.up;
@@ -534,9 +563,12 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
           } else if (pipe.is('pipe-c')) {
             // Option C
             surveyAnswer.q2 = 'C';
-          } else {
+          } else if (pipe.is('pipe-d')) {
             // Option D
             surveyAnswer.q2 = 'D';
+          } else {
+            // Option E
+            surveyAnswer.q2 = 'E';
           }
           console.log('survey answers:', surveyAnswer);
           go('game', { level: 'q3', score: scoreLabel.value, isBig });

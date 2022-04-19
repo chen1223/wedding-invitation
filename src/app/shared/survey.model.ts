@@ -6,6 +6,7 @@ export enum Relation {
   FAMILY = 'family',
   CLASSMATE = 'classmate',
   WORK_COLLEAGUE = 'work colleague',
+  ROTARY_CLUB = 'rotary club',
   OTHERS = 'other'
 }
 export enum Attend {

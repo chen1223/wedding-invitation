@@ -28,6 +28,7 @@ declare const keyPress: any;
 declare const keyRelease: any;
 declare const onKeyPressRepeat: any;
 declare const camPos: any;
+declare const gravity: any;
 declare const text: any;
 declare const layer: any;
 declare const lifespan: any;
