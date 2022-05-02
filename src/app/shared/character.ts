@@ -583,13 +583,15 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
           } else {
             // Option B
             surveyAnswer.q3 = 'B';
-            go('game', { level: 'q5', score: scoreLabel.value, isBig });
+            // go('game', { level: 'q5', score: scoreLabel.value, isBig });
+            endGameSignal$.next();
           }
           break;
         }
         case 'q41': {
           if (surveyAnswer.q4.a1 === 0) {
-            go('game', { level: 'q5', score: scoreLabel.value, isBig });
+            // go('game', { level: 'q5', score: scoreLabel.value, isBig });
+            endGameSignal$.next();
           } else {
             go('game', { level: 'q42', score: scoreLabel.value, isBig });
           }
@@ -600,7 +602,8 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
           break;
         }
         case 'q43': {
-          go('game', { level: 'q5', score: scoreLabel.value, isBig });
+          // go('game', { level: 'q5', score: scoreLabel.value, isBig });
+          endGameSignal$.next();
           break;
         }
         case 'q5': {

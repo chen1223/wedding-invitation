@@ -33,8 +33,9 @@ export class SurveyComponent implements OnInit {
     attendNo: [null, [Validators.required]],
     vegeNo: [null, [Validators.required]],
     childSeatNo: [null, [Validators.required]],
-    invitationType: [null, [Validators.required]],
-    address: [null, [Validators.required]],
+    // invitationType: [null, [Validators.required]],
+    // address: [null, [Validators.required]],
+    address: [null, []],
     phone: [null, [Validators.required]],
     email: [null, [Validators.required]],
     note: [null]
@@ -93,23 +94,23 @@ export class SurveyComponent implements OnInit {
       }
     }
     // Invitation Type
-    switch (this.surveyAnswers.q5) {
-      case 'A': {
-        formData.invitationType = InvitationType.PAPER;
-        break;
-      }
-      case 'B': {
-        formData.invitationType = InvitationType.DIGITAL;
-        break;
-      }
-      case 'C': {
-        formData.invitationType = InvitationType.SKIP;
-        break;
-      }
-    }
+    // switch (this.surveyAnswers.q5) {
+    //   case 'A': {
+    //     formData.invitationType = InvitationType.PAPER;
+    //     break;
+    //   }
+    //   case 'B': {
+    //     formData.invitationType = InvitationType.DIGITAL;
+    //     break;
+    //   }
+    //   case 'C': {
+    //     formData.invitationType = InvitationType.SKIP;
+    //     break;
+    //   }
+    // }
     this.surveyForm.patchValue(formData);
     this.onAttendChange();
-    this.onInvitationTypeChange();
+    // this.onInvitationTypeChange();
   }
 
   // On attend changes, update attendNo
@@ -205,7 +206,8 @@ export class SurveyComponent implements OnInit {
       attendNo: data.attendNo,
       vegeNo: data.vegeNo,
       childSeatNo: data.childSeatNo,
-      invitationType: data.invitationType,
+      // invitationType: data.invitationType,
+      invitationType: InvitationType.DIGITAL,
       address: data.address,
       phone: data.phone,
       email: data.email,
