@@ -3,6 +3,9 @@ import { turtle, turtleWalk } from './turtle';
 
 declare const origin: any;
 export function loadSprites(): void {
+  // loadSound('bg', '/assets/music/bg.mp3');
+  loadSprite('floor', '/assets/img/floor.png');
+  loadSprite('house', '/assets/img/house.png');
   loadSpriteAtlas('/assets/img/items.png', {
     'coin': {
       x: 0,
@@ -94,12 +97,22 @@ export function loadSprites(): void {
     }
   });
   loadSprite('mushroom', '/assets/img/mushroom.png');
+  loadSprite('mountain', '/assets/img/mountain.png');
+  /*** Welcome Page Sprites ***/
+  loadSprite('couple', '/assets/img/welcome/couple.png');
+  loadSprite('start', '/assets/img/welcome/start.png');
+  loadSprite('survey', '/assets/img/welcome/survey.png');
+  loadSprite('start--mobile', '/assets/img/welcome/start--mobile.png');
+  loadSprite('survey--mobile', '/assets/img/welcome/survey--mobile.png');
+  loadSprite('welcome', '/assets/img/welcome/welcome.png');
+  loadSprite('welcome-msg', '/assets/img/welcome/welcome-msg.png');
+  loadSprite('welcome-msg--mobile', '/assets/img/welcome/welcome-msg--mobile.png');
+  loadSprite('cloud', '/assets/img/cloud.png');
+  loadSprite('cloud--long', '/assets/img/cloud-long.png');
   /*** Location Info Sprites ***/
-  loadSprite('date-title', '/assets/img/info/date-title.png');
   loadSprite('date', '/assets/img/info/date.png');
-  loadSprite('entrance-title', '/assets/img/info/entrance-title.png');
-  loadSprite('entrance', '/assets/img/info/entrance.png');
-  loadSprite('location-title', '/assets/img/info/location-title.png');
+  loadSprite('time', '/assets/img/info/time.png');
+  loadSprite('entrance', '/assets/img/info/start.png');
   loadSprite('location', '/assets/img/info/location.png');
   /*** Question 1 Spirtes ***/
   loadSprite('q1', '/assets/img/question/q1.png');
@@ -144,6 +157,9 @@ export function getSpriteConfig(BASE_SCALE: number, scoreLabel: any) {
   return {
     width: 32,
     height: 32,
+    'K': () => [sprite('cloud'), scale(BASE_SCALE / 3), 'cloud'],
+    'q': () => [sprite('cloud--long'), scale(BASE_SCALE / 3), 'cloud'],
+    'c': () => [sprite('floor'), solid(), area(), scale(BASE_SCALE / 2), 'floor'],
     '=': () => [sprite('brick'), solid(), area(), scale(BASE_SCALE), 'brick'],
     '*': () => [sprite('block'), solid(), area(), scale(BASE_SCALE)],
     'u': () => [sprite('unboxed'), solid(), area(), scale(BASE_SCALE)],
@@ -175,6 +191,8 @@ export function getSpriteConfig(BASE_SCALE: number, scoreLabel: any) {
     ],
     '[': () => [sprite('pipe-bl'), solid(), area(), scale(BASE_SCALE)],
     ']': () => [sprite('pipe-br'), solid(), area(), scale(BASE_SCALE)],
+    // Cloud
+    '': () => [sprite('cloud')],
     // Option a pipe
     '~': () => [sprite('pipe-tl'), solid(), area(), scale(BASE_SCALE), 'pipe', 'pipe-a'],
     '_': () => [sprite('pipe-tr'), solid(), area(), scale(BASE_SCALE), 'pipe', 'pipe-a'],
@@ -191,11 +209,9 @@ export function getSpriteConfig(BASE_SCALE: number, scoreLabel: any) {
     'm': () => [sprite('pipe-tl'), solid(), area(), scale(BASE_SCALE), 'pipe', 'pipe-d'],
     'b': () => [sprite('pipe-tr'), solid(), area(), scale(BASE_SCALE), 'pipe', 'pipe-d'],
     /*** Location Info Resources ***/
-    'D': () => [sprite('date-title'), scale(BASE_SCALE / 4)],
     'd': () => [sprite('date'), scale(BASE_SCALE / 4)],
-    'E': () => [sprite('entrance-title'), scale(BASE_SCALE / 4)],
+    'o': () => [sprite('time'), scale(BASE_SCALE / 4)],
     'e': () => [sprite('entrance'), scale(BASE_SCALE / 4)],
-    'L': () => [sprite('location-title'), scale(BASE_SCALE / 4)],
     'l': () => [sprite('location'), scale(BASE_SCALE / 4)],
 
     /*** Question 1 Resources ***/
@@ -218,13 +234,16 @@ export function getSpriteConfig(BASE_SCALE: number, scoreLabel: any) {
 
     /*** Question 4 Resources ***/
     // Q4 1 Triggers
+    '3': () => [sprite('floor'), scale(BASE_SCALE / 2), solid(), area(), 'q4-1-start'],
     '4': () => [sprite('brick'), scale(BASE_SCALE), solid(), area(), 'q4-1-start'],
-    'j': () => [sprite('brick'), scale(BASE_SCALE), solid(), area(), 'q4-1-end'],
+    '8': () => [sprite('floor'), scale(BASE_SCALE / 2), solid(), area(), 'q4-1-start'],
+    'j': () => [sprite('floor'), scale(BASE_SCALE / 2), solid(), area(), 'q4-1-end'],
     // Q4 2 Triggers
     'k': () => [sprite('brick'), scale(BASE_SCALE), solid(), area(), 'q4-2-start'],
     'n': () => [sprite('brick'), scale(BASE_SCALE), solid(), area(), 'q4-2-end'],
     // Q4 3 Triggers
     'p': () => [sprite('brick'), scale(BASE_SCALE), solid(), area(), 'q4-3-start'],
+    '7': () => [sprite('floor'), scale(BASE_SCALE / 2), solid(), area(), 'q4-3-start'],
     'z': () => [sprite('brick'), scale(BASE_SCALE), solid(), area(), 'q4-3-end'],
 
     '%': () => [sprite('q4-1'), scale(BASE_SCALE)],

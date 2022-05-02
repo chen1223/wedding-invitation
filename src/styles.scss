@@ -25,8 +25,21 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   transform: translate3d(0, 0, 0,);
+  position: relative;
+  height: 100%;
+  width: 100%;
+  &.welcome {
+    overflow-y: hidden;
+    background: #000;
+    position: fixed;
+  }
   &.in-game {
     overflow: hidden;
+    background-color: black;
+    canvas {
+      margin: 0 auto;
+      display: block;
+    }
   }
 }
 

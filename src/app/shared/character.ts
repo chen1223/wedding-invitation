@@ -1,7 +1,7 @@
 declare const origin: any;
 import { Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-import { SurveyAnswer } from '../game-board/game-board.component';
+import { MoveDir, SurveyAnswer } from '../game-board/game-board.component';
 import { addKey, loadArrowSprites } from './arrow';
 
 const JUMP_FORCE = 620;
@@ -18,7 +18,6 @@ function healthStatus() {
     update() {},
     sick() {
       this.isHealthy = false;
-      // (this as any).spriteID = 'sick-bill';
       (this as any).use(sprite('sick-bill'))
     },
     healthy() {
@@ -254,7 +253,7 @@ export function registerTouchEvent(): void {
   document.addEventListener('touchcancel', handleTouch, false);
 }
 
-export function addCharacter(currentLevel: string, initBig: boolean, initX: number, initY: number, gameBoard: any, scoreLabel: any, surveyAnswer: SurveyAnswer, q4Status$: Subject<string>, endGameSignal$: Subject<void>) {
+export function addCharacter(currentLevel: string, initBig: boolean, initX: number, initY: number, gameBoard: any, scoreLabel: any, move: MoveDir, surveyAnswer: SurveyAnswer, q4Status$: Subject<string>, endGameSignal$: Subject<void>) {
   const SPEED = 360;
   let isBig = initBig;
   let canSmash = true;
@@ -266,13 +265,6 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
     touchDirection.right = false;
     touchDirection.left = false;
   });
-
-  if (isTouch()) {
-    arrowUp = addKey('arrow-up', width() - 70, height() - 100);
-    arrowDown = addKey('arrow-down', 95, height() - 70);
-    arrowRight = addKey('arrow-right', 145, height() - 100);
-    arrowLeft = addKey('arrow-left', 20, height() - 100);
-  }
 
   const mario = add([
     pos(initX, initY),
@@ -293,7 +285,7 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
         maxPosX = 2000;
         break;
       case 'q2':
-        maxPosX = 4200;
+        maxPosX = 5000;
         break;
       case 'q3':
         maxPosX = 4500;
@@ -316,23 +308,31 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
     } else if (mario.pos.x < 1000) {
       mario.pos.x = 1000;
     }
+    const floor = get('floor')[0];
+    const ground = height() / 2 - (height() - floor.pos.y) + floor.height;
     if (isTouch()) {
-      camPos(mario.pos.x, height() < 400 ? mario.pos.y : 300);
+      if (currentLevel === 'q5') {
+        camPos(mario.pos.x, mario.pos.y > ground ? mario.pos.y : Math.min(ground, mario.pos.y));
+      } else {
+        camPos(mario.pos.x, Math.min(ground, mario.pos.y));
+      }
     } else {
-      camPos(mario.pos.x, mario.height + 72);
+      if (currentLevel === 'q5') {
+        camPos(mario.pos.x, mario.pos.y > ground ? mario.pos.y : Math.min(ground, mario.pos.y));
+      } else {
+        camPos(mario.pos.x, height() / 2 - (height() - floor.pos.y) + floor.height);
+      }
     }
-    const left = keyIsDown('left') || touchDirection.left;
-    const right = keyIsDown('right') || touchDirection.right;
-    const up = keyIsDown('up') || touchDirection.up;
-    const down = keyIsDown('down') || touchDirection.down;
+    const left = keyIsDown('left') || move.left || touchDirection.left;
+    const right = keyIsDown('right') || move.right || touchDirection.right;
+    const up = keyIsDown('up') || move.up || touchDirection.up;
+    const down = keyIsDown('down') || move.down || touchDirection.down;
     const currAnim = mario.curAnim();
-
+    if (move.down) {
+      downTouch$.next();
+    }
     if (mario.grounded()) {
       canSmash = false;
-    }
-
-    if (isTouch()) {
-      checkAllKeys();
     }
 
     // Detect fall
@@ -346,7 +346,6 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
     } else {
       mario.use(area({ width: 16, height: 16 }));
     }
-
     // Is the Right key pressed
     if (right) {
       if (isBig) {
@@ -553,7 +552,6 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
             // Option B
             surveyAnswer.q1 = 'B';
           }
-          console.log('survey answers:', surveyAnswer);
           go('game', { level: 'q2', score: scoreLabel.value, isBig });
           break;
         }
@@ -574,7 +572,6 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
             // Option E
             surveyAnswer.q2 = 'E';
           }
-          console.log('survey answers:', surveyAnswer);
           go('game', { level: 'q3', score: scoreLabel.value, isBig });
           break;
         }
@@ -588,11 +585,9 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
             surveyAnswer.q3 = 'B';
             go('game', { level: 'q5', score: scoreLabel.value, isBig });
           }
-          console.log('survey answers:', surveyAnswer);
           break;
         }
         case 'q41': {
-          console.log('survey answers:', surveyAnswer);
           if (surveyAnswer.q4.a1 === 0) {
             go('game', { level: 'q5', score: scoreLabel.value, isBig });
           } else {
@@ -601,12 +596,10 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
           break;
         }
         case 'q42': {
-          console.log('survey answers:', surveyAnswer);
           go('game', { level: 'q43', score: scoreLabel.value, isBig });
           break;
         }
         case 'q43': {
-          console.log('survey answers:', surveyAnswer);
           go('game', { level: 'q5', score: scoreLabel.value, isBig });
           break;
         }
@@ -621,7 +614,6 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
             // Option C
             surveyAnswer.q5  = 'C';
           }
-          console.log('survey answers:', surveyAnswer);
           endGameSignal$.next();
         }
       }

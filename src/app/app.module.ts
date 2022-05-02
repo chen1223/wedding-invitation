@@ -8,13 +8,15 @@ import { GameBoardComponent } from './game-board/game-board.component';
 import { SurveyComponent } from './survey/survey.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ThankYouComponent } from './thank-you/thank-you.component';
+import { WelcomeComponent } from './welcome/welcome.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GameBoardComponent,
     SurveyComponent,
-    ThankYouComponent
+    ThankYouComponent,
+    WelcomeComponent
   ],
   imports: [
     BrowserModule,

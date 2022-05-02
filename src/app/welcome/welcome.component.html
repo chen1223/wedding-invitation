@@ -1,0 +1,43 @@
+<div class="welcome-container">
+  <!-- Welcome board -->
+  <figure class="welcome">
+    <img src="/assets/img/welcome/welcome.png" alt="Aileen and Bill's Wedding Invitation" class="img --welcome">
+  </figure><!-- End of welcome board -->
+
+  <!-- Cloud 1 -->
+  <figure class="cloud1">
+    <img src="/assets/img/cloud.png" class="img --cloud1">
+  </figure><!-- End of cloud 1 -->
+
+  <!-- Cloud 2 -->
+  <figure class="cloud2">
+    <img src="/assets/img/cloud.png" class="img --cloud2">
+  </figure><!-- End of cloud 2 -->
+
+  <!-- Welcome Msg -->
+  <picture class="welcome-msg">
+    <source media="(pointer: coarse) and (orientation: portrait)" srcset="/assets/img/welcome/welcome-msg--mobile.png">
+    <img src="/assets/img/welcome/welcome-msg.png" alt="Press start to fill out the survey in the game" class="img --msg">
+  </picture><!-- End of welcome msg -->
+
+  <!-- Couple -->
+  <figure class="couple">
+    <img src="/assets/img/welcome/couple.png" alt="Bridge and Groom" class="img --couple">
+  </figure><!-- End of coupld -->
+
+  <!-- Start Button -->
+  <button class="btn --start" type="button" (click)="goToGame()">
+    <picture class="start">
+      <source media="(pointer: coarse) and (orientation: portrait)" srcset="/assets/img/welcome/start--mobile.png">
+      <img src="/assets/img/welcome/start.png" alt="Start" class="img --start">
+    </picture>
+  </button><!-- End of start button -->
+
+  <!-- Survey Button -->
+  <button class="btn --survey" type="button" (click)="goToSurvey()">
+    <picture class="survey">
+      <source media="(pointer: coarse) and (orientation: portrait)" srcset="/assets/img/welcome/survey--mobile.png">
+      <img src="/assets/img/welcome/survey.png" alt="survey" class="img --survey">
+    </picture>
+  </button><!-- End of survey button -->
+</div>

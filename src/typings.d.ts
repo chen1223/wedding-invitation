@@ -51,3 +51,5 @@ declare const fullscreen: any;
 declare const isFullscreen: any;
 declare const onKeyPress: any;
 declare const camScale: any;
+declare const loadSound: any;
+declare const get: any;

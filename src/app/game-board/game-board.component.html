@@ -1,0 +1,52 @@
+<!-- Mute / Unmute button -->
+<button class="music-ctrl" type="button" (click)="toggleMusic()">
+  <ng-container *ngIf="muted;else unmute">
+    <img class="music-icon" src="/assets/img/mute.png" alt="mute">
+  </ng-container>
+  <ng-template #unmute>
+    <img class="music-icon" src="/assets/img/unmute.png" alt="unmute">
+  </ng-template>
+</button>
+<!-- Fullscreen -->
+<button class="fullscreen" type="button" (click)="enterFullscreen()">
+  <ng-container *ngIf="!fullscreen;else exitFull">
+    <img src="/assets/img/fullscreen.png" alt="Enter fullscreen" class="fullscreen-img">
+  </ng-container>
+  <ng-template #exitFull>
+    <img src="/assets/img/exit-fullscreen.png" alt="Exit fullscreen" class="fullscreen-img">
+  </ng-template>
+</button>
+<!-- Arrow Left -->
+<button class="ctrl --left" (touchstart)="keyDown('left')" (touchend)="keyUp('left')">
+  <svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54.95 32">
+    <defs><style>.cls-1{fill:#a39b9b;}</style></defs>
+    <title>arrow-left</title>
+    <rect class="cls-1" x="22.61" y="7.33" width="32.34" height="17.78"/>
+    <polygon class="cls-1" points="0 16 27.71 32 27.71 0 0 16"/>
+  </svg>
+</button><!-- End of arrow left -->
+<!-- Arrow right -->
+<button class="ctrl --right" (touchstart)="keyDown('right')" (touchend)="keyUp('right')">
+  <svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55.06 32">
+    <defs><style>.cls-1{fill:#a39b9b;}</style></defs>
+    <title>arrow-right</title>
+    <rect class="cls-1" x="358.9" y="369.31" width="17.78" height="32.34" transform="translate(-374.2 378.08) rotate(-89.21)"/>
+    <polygon class="cls-1" points="55.06 16.38 27.57 0 27.13 32 55.06 16.38"/>
+  </svg>
+</button><!-- End of arrow right -->
+<!-- Arrow down -->
+<button class="ctrl --down" (touchstart)="keyDown('down')" (touchend)="keyUp('down')">
+  <svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 55.06">
+    <defs><style>.cls-1{fill:#a39b9b;}</style></defs>
+    <title>arrow-down</title><rect class="cls-1" x="337.36" y="273.9" width="32.34" height="17.78" transform="translate(-271.25 365.9) rotate(-89.21)"/>
+    <polygon class="cls-1" points="15.62 55.06 32 27.57 0 27.13 15.62 55.06"/>
+  </svg>
+</button><!-- End of arrow down -->
+<!-- Arrow up -->
+<button class="ctrl --up" (touchstart)="keyDown('up')" (touchend)="keyUp('up')">
+  <svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 55.01">
+    <defs><style>.cls-1{fill:#a39b9b;}</style></defs>
+    <title>arrow-up</title><rect class="cls-1" x="335.35" y="298.92" width="32.34" height="17.78" transform="translate(-294.5 388.19) rotate(-89.61)"/>
+    <polygon class="cls-1" points="16.19 0 0 27.6 32 27.82 16.19 0"/>
+  </svg>
+</button><!-- End of arrow up -->

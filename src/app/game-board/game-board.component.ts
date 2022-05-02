@@ -16,6 +16,13 @@ declare const origin: any;
 const BASE_SCALE = 2;
 const MUSHROOM_SPEED = 50;
 
+export interface MoveDir {
+  left: boolean;
+  right: boolean;
+  down: boolean;
+  up: boolean;
+}
+
 export interface SurveyResult {
   guestName: string;
   guestFrom: string;
@@ -57,6 +64,11 @@ export interface SurveyAnswer {
 })
 export class GameBoardComponent implements OnInit, OnDestroy {
 
+  isTouch = false;
+  music: HTMLAudioElement | null = null;
+  muted = true;
+  fullscreen = false;
+
   gameBoard: any;
   score = 0;
   scoreLabel: any;
@@ -86,88 +98,166 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   startTime: moment.Moment | null = null;
 
+  moveDir: MoveDir = {
+    right: false,
+    left: false,
+    up: false,
+    down: false,
+  };
+
   constructor(private router: Router) { }
 
   ngOnInit(): void {
     this.init();
-    // this.loadBackground();
     registerTouchEvent();
     loadEvilMushroom();
     loadTurtle();
     loadCharacter();
     loadSprites();
+    this.music = new Audio('/assets/music/bg.mp3');
+    this.music.loop = true;
+    this.music.volume = 0.6;
+    this.music.pause();
+    // this.music = play('bg', { volume: 0.6, loop: true });
+    // (this.music as any)?.pause();
     this.addGameScene();
-    this.addStartScene();
+
+    go('game', { level: 'q1', score: 0, isBig: false });
+    document.querySelector('canvas')?.focus();
     this.regEndGame();
   }
 
   // Init game board
   init(): void {
-    kaboom({
-      width: window.innerWidth,
-      height: window.innerHeight,
-      background: [255, 221, 223, 1],
-    });
-
-  }
-
-  async loadBackground() {
-    let bgImg = await loadSprite('background', '/assets/img/bg.png');
-    let background = add([
-      sprite('background'),
-      pos(width() / 2, height() / 2),
-      origin("center"),
-      scale(1),
-      layer('bg'),
-    ]);
-    // Scale the background to cover the screen
-    background.scaleTo(Math.max(
-      width() / bgImg.tex.width,
-      height() / bgImg.tex.height
-    ));
-  }
-
-  // Start Scene
-  addStartScene(): void {
-    scene('start', () => {
-      add([
-        text('Welcome to Aileen and Bill\'s Wedding Invitation Game\n\nClick on Start to begin', {
-          size: 32,
-          width: Math.floor(width() * .9)
-        }),
-        pos(vec2(width() / 2, height() / 2)),
-        origin('center'),
-        area(),
-        color(255, 255, 255),
-      ]);
-      const startTitle = add([
-        text('Start', { size: 48, font: 'apl386o' }),
-        pos(vec2(width() / 2, height() / 2 + 150)),
-        origin('center'),
-        area(),
-        color(255, 255, 255),
-        'start-title'
-      ]);
-      onClick('start-title', () => {
-        this.startTime = moment();
-        go('game', { level: 'q1', score: 0, isBig: false });
+    if (window.matchMedia("(pointer: coarse)").matches) {
+      this.isTouch = true;
+      if (window.matchMedia("(orientation: landscape)").matches) {
+        kaboom({
+          width: window.innerWidth,
+          height: window.innerHeight,
+          background: [255, 246, 193, 1],
+        });
+      } else {
+        kaboom({
+          width: window.innerWidth,
+          height: window.innerHeight * 0.75,
+          background: [255, 246, 193, 1],
+        });
+      }
+    } else {
+      kaboom({
+        width: Math.max(window.innerWidth * 0.8, 1025),
+        height: window.innerHeight,
+        background: [255, 246, 193, 1],
       });
-      onTouchStart((event: any, pos: any) => {
-        this.startTime = moment();
-        if (pos.x >= startTitle.pos.x - startTitle.width/2 && pos.x <= (startTitle.pos.x + startTitle.width/2) &&
-            pos.y >= startTitle.pos.y - startTitle.height/2 && pos.y <= (startTitle.pos.y + startTitle.height/2)) {
-          go('game', { level: 'q1', score: 0, isBig: false });
-        }
-      })
-    });
-    go('start');
+    }
   }
 
   addLayer(): void {
     return layers(['bg', 'obj', 'ui'], 'obj');
   }
 
+  addGameBg(level: string): void {
+    const floor = get('floor')[0].pos.y + 8;
+    switch (level) {
+      case 'q1': {
+        add([
+          sprite('mountain'),
+          layer('bg'),
+          pos(vec2(500, floor)),
+          origin('botleft'),
+          scale(BASE_SCALE / 3)
+        ]);
+
+        add([
+          sprite('mountain'),
+          layer('bg'),
+          pos(vec2(1600, floor)),
+          origin('botleft'),
+          scale(BASE_SCALE / 3)
+        ]);
+        break;
+      }
+      case 'q2': {
+        add([
+          sprite('house'),
+          layer('bg'),
+          pos(vec2(400, floor)),
+          origin('botleft'),
+          scale(BASE_SCALE * 0.8)
+        ]);
+
+        add([
+          sprite('mountain'),
+          layer('bg'),
+          pos(vec2(2000, floor)),
+          origin('botleft'),
+          scale(BASE_SCALE / 3 * 0.8)
+        ]);
+        break;
+      }
+      case 'q3': {
+        add([
+          sprite('mountain'),
+          layer('bg'),
+          pos(vec2(200, floor)),
+          origin('botleft'),
+          scale(BASE_SCALE / 3)
+        ]);
+
+        add([
+          sprite('mountain'),
+          layer('bg'),
+          pos(vec2(2400, floor)),
+          origin('botleft'),
+          scale(BASE_SCALE / 3)
+        ]);
+        break;
+      }
+      case 'q41': {
+        add([
+          sprite('house'),
+          layer('bg'),
+          pos(vec2(600, floor)),
+          origin('botleft'),
+          scale(BASE_SCALE * 0.8)
+        ]);
+        add([
+          sprite('mountain'),
+          layer('bg'),
+          pos(vec2(3000, floor)),
+          origin('botleft'),
+          scale(BASE_SCALE / 3)
+        ]);
+
+        break;
+      }
+      case 'q43': {
+        add([
+          sprite('mountain'),
+          layer('bg'),
+          pos(vec2(1100, floor)),
+          origin('botleft'),
+          scale(BASE_SCALE / 3)
+        ]);
+
+        add([
+          sprite('mountain'),
+          layer('bg'),
+          pos(vec2(2700, floor)),
+          origin('botleft'),
+          scale(BASE_SCALE / 3 * 0.8)
+        ]);
+
+        break;
+      }
+    }
+  }
+
   addGameScene(): void {
+    if (window.matchMedia("(orientation: landscape) and (max-height: 767.5px)").matches) {
+      document.documentElement.requestFullscreen();
+    }
     scene('game', (gameConfig: GameOption) => {
       const labelFontSize = window.innerWidth < 750 ? 48 : 70;
       this.addLayer();
@@ -189,8 +279,8 @@ export class GameBoardComponent implements OnInit, OnDestroy {
       const config = getSpriteConfig(BASE_SCALE, this.scoreLabel);
       const map = maps[gameConfig.level];
       this.gameBoard = addLevel(map, config);
-      // this.loadBackground();
-      const player = addCharacter(gameConfig.level, gameConfig.isBig, 1000, 0, this.gameBoard, this.scoreLabel, this.SurveyAnswers, this.q4Status$, this.endGameSignal$);
+      this.addGameBg(gameConfig.level);
+      const player = addCharacter(gameConfig.level, gameConfig.isBig, 1000, 0, this.gameBoard, this.scoreLabel, this.moveDir, this.SurveyAnswers, this.q4Status$, this.endGameSignal$);
 
       this.q4Status$.pipe(takeUntil(this.onDestroy$)).subscribe(state => {
         switch (state) {
@@ -224,35 +314,35 @@ export class GameBoardComponent implements OnInit, OnDestroy {
         if (gameConfig.level === 'q41' && this.q4Trigger.q41) {
           drawSprite({
             sprite: 'q4-1',
-            pos: vec2(1800, 100),
+            pos: vec2(2480, 270),
             width: 150
           });
           drawText({
             text: this.SurveyAnswers.q4.a1.toString(),
             size: 48,
-            pos: vec2(2000, 100)
+            pos: vec2(2680, 270)
           });
         } else if (gameConfig.level === 'q42' && this.q4Trigger.q42) {
           drawSprite({
             sprite: 'q4-2',
-            pos: vec2(1200, 100),
+            pos: vec2(1900, 280),
             width: 150
           });
           drawText({
             text: this.SurveyAnswers.q4.a2.toString(),
             size: 48,
-            pos: vec2(1400, 100)
+            pos: vec2(2100, 280)
           });
         } else if (gameConfig.level === 'q43' && this.q4Trigger.q43) {
           drawSprite({
             sprite: 'q4-3',
-            pos: vec2(1200, 100),
+            pos: vec2(2100, 300),
             width: 150
           });
           drawText({
             text: this.SurveyAnswers.q4.a3.toString(),
             size: 48,
-            pos: vec2(1400, 100)
+            pos: vec2(2300, 300)
           });
         }
       });
@@ -270,8 +360,73 @@ export class GameBoardComponent implements OnInit, OnDestroy {
       const finishTime = moment();
       const duration = moment.duration(finishTime.diff(this.startTime));
       sessionStorage.setItem('duration', Math.floor(duration.asSeconds()).toString());
-      this.router.navigateByUrl('confirm');
+      this.router.navigateByUrl('survey');
+      this.music?.pause();
     });
+  }
+
+  // On user clicks on the arrow
+  keyDown(direction: string) {
+    switch (direction) {
+      case 'left': {
+        this.moveDir.left = true;
+        break;
+      }
+      case 'right': {
+        this.moveDir.right = true;
+        break;
+      }
+      case 'up': {
+        this.moveDir.up = true;
+        break;
+      }
+      case 'down': {
+        this.moveDir.down = true;
+        break;
+      }
+    }
+  }
+
+  keyUp(direction: string): void {
+    switch (direction) {
+      case 'left': {
+        this.moveDir.left = false;
+        break;
+      }
+      case 'right': {
+        this.moveDir.right = false;
+        break;
+      }
+      case 'up': {
+        this.moveDir.up = false;
+        break;
+      }
+      case 'down': {
+        this.moveDir.down = false;
+        break;
+      }
+    }
+  }
+
+  toggleMusic(): void {
+    if (!this.music) {
+      return;
+    }
+    this.muted = !this.muted;
+    if (this.muted) {
+      this.music.pause();
+    } else {
+      this.music.play();
+    }
+  }
+
+  enterFullscreen(): void {
+    if (!this.fullscreen) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+    this.fullscreen = !this.fullscreen;
   }
 
   ngOnDestroy(): void {

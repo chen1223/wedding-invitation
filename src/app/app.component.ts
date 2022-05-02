@@ -17,8 +17,12 @@ export class AppComponent implements OnInit{
         if (event instanceof NavigationEnd) {
           const body = document.querySelector('body');
           if (event.url === '/') {
+            body?.classList.add('welcome');
+          } else if (event.url === '/game') {
+            body?.classList.remove('welcome');
             body?.classList.add('in-game');
           } else {
+            body?.classList.remove('welcome');
             body?.classList.remove('in-game');
           }
         }

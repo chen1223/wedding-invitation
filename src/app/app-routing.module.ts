@@ -3,10 +3,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { GameBoardComponent } from './game-board/game-board.component';
 import { SurveyComponent } from './survey/survey.component';
 import { ThankYouComponent } from './thank-you/thank-you.component';
+import { WelcomeComponent } from './welcome/welcome.component';
 
 const routes: Routes = [
   {
-    path: 'confirm',
+    path: 'game',
+    component: GameBoardComponent,
+  },
+  {
+    path: 'survey',
     component: SurveyComponent
   },
   {
@@ -16,7 +21,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: GameBoardComponent
+    component: WelcomeComponent
   }
 ];
 
