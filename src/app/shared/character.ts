@@ -583,8 +583,7 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
           } else {
             // Option B
             surveyAnswer.q3 = 'B';
-            // go('game', { level: 'q5', score: scoreLabel.value, isBig });
-            endGameSignal$.next();
+            go('game', { level: 'q41', score: scoreLabel.value, isBig });
           }
           break;
         }

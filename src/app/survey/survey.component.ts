@@ -119,46 +119,46 @@ export class SurveyComponent implements OnInit {
     const attendRow = document.querySelector('.row.--attend');
     const vegeRow = document.querySelector('.row.--vege-no');
     const chairRow = document.querySelector('.row.--child-chair');
-    if (attend === Attend.YES) {
-      // Make attend no required
-      this.surveyForm.get('attendNo')?.addValidators([Validators.required]);
-      this.surveyForm.get('attendNo')?.updateValueAndValidity();
-      this.surveyForm.get('attendNo')?.enable();
-      attendRow?.classList.add('required');
+    // if (attend === Attend.YES) {
+    //   // Make attend no required
+    //   this.surveyForm.get('attendNo')?.addValidators([Validators.required]);
+    //   this.surveyForm.get('attendNo')?.updateValueAndValidity();
+    //   this.surveyForm.get('attendNo')?.enable();
+    //   attendRow?.classList.add('required');
 
-      // Make vege no required
-      this.surveyForm.get('vegeNo')?.addValidators([Validators.required]);
-      this.surveyForm.get('vegeNo')?.updateValueAndValidity();
-      this.surveyForm.get('vegeNo')?.enable();
-      vegeRow?.classList.add('required');
+    //   // Make vege no required
+    //   this.surveyForm.get('vegeNo')?.addValidators([Validators.required]);
+    //   this.surveyForm.get('vegeNo')?.updateValueAndValidity();
+    //   this.surveyForm.get('vegeNo')?.enable();
+    //   vegeRow?.classList.add('required');
 
-      // Make child chair required
-      this.surveyForm.get('childSeatNo')?.addValidators([Validators.required]);
-      this.surveyForm.get('childSeatNo')?.updateValueAndValidity();
-      this.surveyForm.get('childSeatNo')?.enable();
-      chairRow?.classList.add('required');
-    } else {
-      // Make attend no optional
-      this.surveyForm.get('attendNo')?.removeValidators(Validators.required);
-      this.surveyForm.get('attendNo')?.updateValueAndValidity();
-      this.surveyForm.get('attendNo')?.setValue(0);
-      this.surveyForm.get('attendNo')?.disable();
-      attendRow?.classList.remove('required');
+    //   // Make child chair required
+    //   this.surveyForm.get('childSeatNo')?.addValidators([Validators.required]);
+    //   this.surveyForm.get('childSeatNo')?.updateValueAndValidity();
+    //   this.surveyForm.get('childSeatNo')?.enable();
+    //   chairRow?.classList.add('required');
+    // } else {
+    //   // Make attend no optional
+    //   this.surveyForm.get('attendNo')?.removeValidators(Validators.required);
+    //   this.surveyForm.get('attendNo')?.updateValueAndValidity();
+    //   this.surveyForm.get('attendNo')?.setValue(0);
+    //   this.surveyForm.get('attendNo')?.disable();
+    //   attendRow?.classList.remove('required');
 
-      // Make vege no optional
-      this.surveyForm.get('vegeNo')?.removeValidators(Validators.required);
-      this.surveyForm.get('vegeNo')?.updateValueAndValidity();
-      this.surveyForm.get('vegeNo')?.setValue(0);
-      this.surveyForm.get('vegeNo')?.disable();
-      vegeRow?.classList.remove('required');
+    //   // Make vege no optional
+    //   this.surveyForm.get('vegeNo')?.removeValidators(Validators.required);
+    //   this.surveyForm.get('vegeNo')?.updateValueAndValidity();
+    //   this.surveyForm.get('vegeNo')?.setValue(0);
+    //   this.surveyForm.get('vegeNo')?.disable();
+    //   vegeRow?.classList.remove('required');
 
-      // Make child seat no optional
-      this.surveyForm.get('childSeatNo')?.removeValidators(Validators.required);
-      this.surveyForm.get('childSeatNo')?.updateValueAndValidity();
-      this.surveyForm.get('childSeatNo')?.setValue(0);
-      this.surveyForm.get('childSeatNo')?.disable();
-      chairRow?.classList.remove('required');
-    }
+    //   // Make child seat no optional
+    //   this.surveyForm.get('childSeatNo')?.removeValidators(Validators.required);
+    //   this.surveyForm.get('childSeatNo')?.updateValueAndValidity();
+    //   this.surveyForm.get('childSeatNo')?.setValue(0);
+    //   this.surveyForm.get('childSeatNo')?.disable();
+    //   chairRow?.classList.remove('required');
+    // }
   }
 
   // On invitation type changes, update address validation
