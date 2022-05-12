@@ -109,6 +109,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.init();
+    this.startTime = moment();
     registerTouchEvent();
     loadEvilMushroom();
     loadTurtle();
