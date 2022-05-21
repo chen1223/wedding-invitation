@@ -352,16 +352,22 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   regEndGame(): void {
     this.endGameSignal$.pipe(takeUntil(this.onDestroy$)).subscribe((finalScore) => {
+      const finishTime = moment();
+      const duration = moment.duration(finishTime.diff(this.startTime));
+      sessionStorage.setItem('duration', Math.floor(duration.asSeconds()).toString());
+
       this.score = finalScore;
+
+      // Add time bonus score
+      const timeBonus = Math.floor(100 * (120 / Math.floor(duration.asSeconds())));
+      this.score += timeBonus;
+
       localStorage.setItem('gameAnswer', JSON.stringify(this.SurveyAnswers));
       // Update highest score
       const lastScore = localStorage.getItem('maxScore') || 0;
       if (this.score > +lastScore) {
         localStorage.setItem('maxScore', this.score.toString());
       }
-      const finishTime = moment();
-      const duration = moment.duration(finishTime.diff(this.startTime));
-      sessionStorage.setItem('duration', Math.floor(duration.asSeconds()).toString());
       this.router.navigateByUrl('survey');
       this.music?.pause();
     });
