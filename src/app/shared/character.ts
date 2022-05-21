@@ -253,7 +253,7 @@ export function registerTouchEvent(): void {
   document.addEventListener('touchcancel', handleTouch, false);
 }
 
-export function addCharacter(currentLevel: string, initBig: boolean, initX: number, initY: number, gameBoard: any, scoreLabel: any, move: MoveDir, surveyAnswer: SurveyAnswer, q4Status$: Subject<string>, endGameSignal$: Subject<void>) {
+export function addCharacter(currentLevel: string, initBig: boolean, initX: number, initY: number, gameBoard: any, scoreLabel: any, move: MoveDir, surveyAnswer: SurveyAnswer, q4Status$: Subject<string>, endGameSignal$: Subject<number>) {
   const SPEED = 360;
   let isBig = initBig;
   let canSmash = true;
@@ -590,7 +590,7 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
         case 'q41': {
           if (surveyAnswer.q4.a1 === 0) {
             // go('game', { level: 'q5', score: scoreLabel.value, isBig });
-            endGameSignal$.next();
+            endGameSignal$.next(scoreLabel.value);
           } else {
             go('game', { level: 'q42', score: scoreLabel.value, isBig });
           }
@@ -602,7 +602,7 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
         }
         case 'q43': {
           // go('game', { level: 'q5', score: scoreLabel.value, isBig });
-          endGameSignal$.next();
+          endGameSignal$.next(scoreLabel.value);
           break;
         }
         case 'q5': {
@@ -616,7 +616,7 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
             // Option C
             surveyAnswer.q5  = 'C';
           }
-          endGameSignal$.next();
+          endGameSignal$.next(scoreLabel.value);
         }
       }
     }

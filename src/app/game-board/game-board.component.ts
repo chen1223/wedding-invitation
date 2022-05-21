@@ -85,7 +85,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     q5: null
   };
 
-  endGameSignal$ = new Subject<void>();
+  endGameSignal$ = new Subject<number>();
   onDestroy$ = new Subject<void>();
 
   q4Status$ = new Subject<string>();
@@ -351,7 +351,8 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   }
 
   regEndGame(): void {
-    this.endGameSignal$.pipe(takeUntil(this.onDestroy$)).subscribe(() => {
+    this.endGameSignal$.pipe(takeUntil(this.onDestroy$)).subscribe((finalScore) => {
+      this.score = finalScore;
       localStorage.setItem('gameAnswer', JSON.stringify(this.SurveyAnswers));
       // Update highest score
       const lastScore = localStorage.getItem('maxScore') || 0;
