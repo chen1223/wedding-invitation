@@ -19,7 +19,11 @@ export class AppComponent implements OnInit{
         if (event.url.includes('game')) {
           body?.classList.remove('welcome');
           body?.classList.add('in-game');
-        } else if (event.url.includes('thankyou') || event.url.includes('survey')) {
+        } else if (event.url.includes('thankyou')) {
+          body?.classList.remove('welcome');
+          body?.classList.remove('in-game');
+          body?.classList.add('thankyou');
+        } else if (event.url.includes('survey')) {
           body?.classList.remove('welcome');
           body?.classList.remove('in-game');
         } else {

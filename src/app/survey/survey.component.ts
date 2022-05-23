@@ -31,6 +31,7 @@ export class SurveyComponent implements OnInit {
     relation: [null, [Validators.required]],
     attend: [null, [Validators.required]],
     attendNo: [null, [Validators.required]],
+    childNo: [null, [Validators.required]],
     vegeNo: [null, [Validators.required]],
     childSeatNo: [null, [Validators.required]],
     // invitationType: [null, [Validators.required]],
@@ -66,6 +67,7 @@ export class SurveyComponent implements OnInit {
       relation: '',
       attend: this.surveyAnswers.q3 === 'A' ? Attend.YES : Attend.NO,
       attendNo: this.surveyAnswers.q4.a1,
+      childNo: 0,
       vegeNo: this.surveyAnswers.q4.a2,
       childSeatNo: this.surveyAnswers.q4.a3,
       invitationType: ''
@@ -204,6 +206,7 @@ export class SurveyComponent implements OnInit {
       relation: data.relation,
       attend: data.attend,
       attendNo: data.attendNo,
+      childNo: data.childNo,
       vegeNo: data.vegeNo,
       childSeatNo: data.childSeatNo,
       // invitationType: data.invitationType,

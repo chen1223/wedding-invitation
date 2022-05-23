@@ -29,6 +29,7 @@ export interface SurveyResult {
   relation: string;
   attend: string;
   attendNo: string;
+  childNo: string;
   vegeNo: string;
   childSeatNo: string;
   invitationType: string;

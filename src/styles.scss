@@ -41,6 +41,9 @@ body {
       display: block;
     }
   }
+  &.thankyou {
+    background: var(--primary-color-light);
+  }
 }
 
 h1 {
