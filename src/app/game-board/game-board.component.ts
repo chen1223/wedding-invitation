@@ -363,13 +363,13 @@ export class GameBoardComponent implements OnInit, OnDestroy {
       const timeBonus = Math.floor(100 * (120 / Math.floor(duration.asSeconds())));
       this.score += timeBonus;
 
-      localStorage.setItem('gameAnswer', JSON.stringify(this.SurveyAnswers));
-      // Update highest score
-      const lastScore = localStorage.getItem('maxScore') || 0;
-      if (this.score > +lastScore) {
-        localStorage.setItem('maxScore', this.score.toString());
-      }
-      this.router.navigateByUrl('survey');
+      // localStorage.setItem('gameAnswer', JSON.stringify(this.SurveyAnswers));
+      // // Update highest score
+      // const lastScore = localStorage.getItem('maxScore') || 0;
+      // if (this.score > +lastScore) {
+      //   localStorage.setItem('maxScore', this.score.toString());
+      // }
+      this.router.navigateByUrl('thankyou');
       this.music?.pause();
     });
   }

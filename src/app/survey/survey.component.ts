@@ -218,15 +218,15 @@ export class SurveyComponent implements OnInit {
       score: this.score.toString(),
       timeFinish: duration || ''
     };
-    this.apiService.saveForm(body).subscribe(
-      res => {
-        const msg = res.msg;
-        sessionStorage.setItem('currentUser', data.name);
-        this.router.navigateByUrl('thankyou');
-      },
-      err => {
-        console.error('Something went wrong, please try again later');
-      }
-    );
+    // this.apiService.saveForm(body).subscribe(
+    //   res => {
+    //     const msg = res.msg;
+    //     sessionStorage.setItem('currentUser', data.name);
+    //     this.router.navigateByUrl('thankyou');
+    //   },
+    //   err => {
+    //     console.error('Something went wrong, please try again later');
+    //   }
+    // );
   }
 }

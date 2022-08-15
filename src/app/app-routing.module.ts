@@ -10,10 +10,10 @@ const routes: Routes = [
     path: 'game',
     component: GameBoardComponent,
   },
-  {
-    path: 'survey',
-    component: SurveyComponent
-  },
+  // {
+  //   path: 'survey',
+  //   component: SurveyComponent
+  // },
   {
     path: 'thankyou',
     component: ThankYouComponent,
