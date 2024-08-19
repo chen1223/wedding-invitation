@@ -1,8 +1,10 @@
 declare const origin: any;
-import { Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+
 import { MoveDir, SurveyAnswer } from '../game-board/game-board.component';
 import { addKey, loadArrowSprites } from './arrow';
+import { take, takeUntil } from 'rxjs/operators';
+
+import { Subject } from 'rxjs';
 
 const JUMP_FORCE = 620;
 const BIG_JUMP_FORCE = 700;
@@ -12,24 +14,24 @@ const FALL_DEATH = 1500;
 function healthStatus() {
   return {
     id: 'healthStatus',
-    require: ["pos", "area", "sprite"],
+    require: ['pos', 'area', 'sprite'],
     isHealthy: true,
     lastCollide: null,
     update() {},
     sick() {
       this.isHealthy = false;
-      (this as any).use(sprite('sick-bill'))
+      (this as any).use(sprite('sick-bill'));
     },
     healthy() {
       this.isHealthy = true;
       (this as any).use(sprite('mario'));
-    }
-  }
+    },
+  };
 }
 
 export function loadCharacter(): void {
   loadSpriteAtlas('/assets/img/bill-sprite.png', {
-    'mario': {
+    mario: {
       x: 0,
       y: 0,
       sliceX: 26,
@@ -39,34 +41,34 @@ export function loadCharacter(): void {
       anims: {
         'idle--sm': {
           from: 0,
-          to: 0
+          to: 0,
         },
         'idle--lg': {
           from: 8,
-          to: 8
+          to: 8,
         },
         'run--sm': {
           from: 1,
-          to: 3
+          to: 3,
         },
         'run--lg': {
           from: 9,
-          to: 11
+          to: 11,
         },
         'jump--sm': {
           from: 5,
-          to: 5
+          to: 5,
         },
         'jump--lg': {
           from: 13,
-          to: 13
+          to: 13,
         },
         'get-down': {
           from: 14,
-          to: 14
-        }
-      }
-    }
+          to: 14,
+        },
+      },
+    },
   });
   loadSpriteAtlas('/assets/img/sick-bill-sprite.png', {
     'sick-bill': {
@@ -79,34 +81,34 @@ export function loadCharacter(): void {
       anims: {
         'idle--sm': {
           from: 0,
-          to: 0
+          to: 0,
         },
         'idle--lg': {
           from: 8,
-          to: 8
+          to: 8,
         },
         'run--sm': {
           from: 1,
-          to: 3
+          to: 3,
         },
         'run--lg': {
           from: 9,
-          to: 11
+          to: 11,
         },
         'jump--sm': {
           from: 5,
-          to: 5
+          to: 5,
         },
         'jump--lg': {
           from: 13,
-          to: 13
+          to: 13,
         },
         'get-down': {
           from: 14,
-          to: 14
-        }
-      }
-    }
+          to: 14,
+        },
+      },
+    },
   });
   if (isTouch()) {
     loadArrowSprites();
@@ -125,7 +127,7 @@ const touchDirection: { [key: string]: boolean } = {
   up: false,
   down: false,
   left: false,
-  right: false
+  right: false,
 };
 
 // Hold a list of touch points
@@ -146,7 +148,6 @@ function determineKey(touchEvent: Touch): string | null {
   const downYStart = arrowDown.pos.y;
   const downYEnd = arrowDown.pos.y + arrowDown.height;
 
-
   // Determine if the Right key is clicked
   const rightXStart = arrowRight.pos.x;
   const rightXEnd = arrowRight.pos.x + arrowRight.width;
@@ -162,22 +163,42 @@ function determineKey(touchEvent: Touch): string | null {
   const touchX = touchEvent.pageX;
   const touchY = touchEvent.pageY;
   // Determine if the Up key is clicked
-  if (touchX >= upXStart && touchX <= upXEnd && touchY >= upYStart && touchY <= upYEnd ) {
+  if (
+    touchX >= upXStart &&
+    touchX <= upXEnd &&
+    touchY >= upYStart &&
+    touchY <= upYEnd
+  ) {
     return 'up';
   }
 
   // Determine if the Down key is clicked
-  if (touchX >= downXStart && touchX <= downXEnd && touchY >= downYStart && touchY <= downYEnd ) {
+  if (
+    touchX >= downXStart &&
+    touchX <= downXEnd &&
+    touchY >= downYStart &&
+    touchY <= downYEnd
+  ) {
     return 'down';
   }
 
   // Determine if the Right key is clicked
-  if (touchX >= rightXStart && touchX <= rightXEnd && touchY >= rightYStart && touchY <= rightYEnd ) {
+  if (
+    touchX >= rightXStart &&
+    touchX <= rightXEnd &&
+    touchY >= rightYStart &&
+    touchY <= rightYEnd
+  ) {
     return 'right';
   }
 
   // Determine if the Left key is clicked
-  if (touchX >= leftXStart && touchX <= lefttXEnd && touchY >= leftYStart && touchY <= leftYEnd ) {
+  if (
+    touchX >= leftXStart &&
+    touchX <= lefttXEnd &&
+    touchY >= leftYStart &&
+    touchY <= leftYEnd
+  ) {
     return 'left';
   }
   return null;
@@ -188,7 +209,7 @@ function checkAllKeys(): void {
   let rightTouched = false;
   let upTouched = false;
   let downTouched = false;
-  touchPoints.forEach(touch => {
+  touchPoints.forEach((touch) => {
     const key = determineKey(touch);
     switch (key) {
       case 'left': {
@@ -217,7 +238,13 @@ function checkAllKeys(): void {
 
 function handleTouch(event: TouchEvent) {
   const changedTouch = event.changedTouches;
-  const index = touchPoints.map(record => record.identifier).indexOf(changedTouch.length === 1 ? changedTouch[0].identifier : changedTouch[changedTouch.length - 1].identifier);
+  const index = touchPoints
+    .map((record) => record.identifier)
+    .indexOf(
+      changedTouch.length === 1
+        ? changedTouch[0].identifier
+        : changedTouch[changedTouch.length - 1].identifier
+    );
   const key = determineKey(changedTouch[0]);
   switch (event.type) {
     case 'touchstart': {
@@ -253,11 +280,24 @@ export function registerTouchEvent(): void {
   document.addEventListener('touchcancel', handleTouch, false);
 }
 
-export function addCharacter(currentLevel: string, initBig: boolean, initX: number, initY: number, gameBoard: any, scoreLabel: any, move: MoveDir, surveyAnswer: SurveyAnswer, q4Status$: Subject<string>, endGameSignal$: Subject<number>) {
+export function addCharacter(
+  currentLevel: string,
+  initBig: boolean,
+  initX: number,
+  initY: number,
+  gameBoard: any,
+  scoreLabel: any,
+  move: MoveDir,
+  surveyAnswer: SurveyAnswer,
+  q4Status$: Subject<string>,
+  endGameSignal$: Subject<number>
+) {
   const SPEED = 360;
   let isBig = initBig;
   let canSmash = true;
-  const onMobileLandscape = window.matchMedia('(orientation: landscape)').matches && window.innerHeight < 750;
+  const onMobileLandscape =
+    window.matchMedia('(orientation: landscape)').matches &&
+    window.innerHeight < 750;
 
   switchLevel$.pipe(take(1)).subscribe(() => {
     touchDirection.top = false;
@@ -274,7 +314,7 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
     scale(2),
     origin('bot'),
     healthStatus(),
-    'mario'
+    'mario',
   ]);
   // Initial animation
   mario.play('idle--sm');
@@ -312,15 +352,24 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
     const ground = height() / 2 - (height() - floor.pos.y) + floor.height;
     if (isTouch()) {
       if (currentLevel === 'q5') {
-        camPos(mario.pos.x, mario.pos.y > ground ? mario.pos.y : Math.min(ground, mario.pos.y));
+        camPos(
+          mario.pos.x,
+          mario.pos.y > ground ? mario.pos.y : Math.min(ground, mario.pos.y)
+        );
       } else {
         camPos(mario.pos.x, Math.min(ground, mario.pos.y));
       }
     } else {
       if (currentLevel === 'q5') {
-        camPos(mario.pos.x, mario.pos.y > ground ? mario.pos.y : Math.min(ground, mario.pos.y));
+        camPos(
+          mario.pos.x,
+          mario.pos.y > ground ? mario.pos.y : Math.min(ground, mario.pos.y)
+        );
       } else {
-        camPos(mario.pos.x, height() / 2 - (height() - floor.pos.y) + floor.height);
+        camPos(
+          mario.pos.x,
+          height() / 2 - (height() - floor.pos.y) + floor.height
+        );
       }
     }
     const left = keyIsDown('left') || move.left || touchDirection.left;
@@ -411,7 +460,6 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
         mario.play('idle--sm');
       }
     }
-
   });
 
   // Headbump
@@ -433,22 +481,32 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
       gameBoard.spawn('u', obj.gridPos.sub(0, 0));
     } else if (obj.is('add-attendee')) {
       // Increase attendee by 1
-      surveyAnswer.q4.a1 = surveyAnswer.q4.a1 < 5 ? surveyAnswer.q4.a1 += 1 : surveyAnswer.q4.a1;
+      surveyAnswer.q4.a1 =
+        surveyAnswer.q4.a1 < 5 ? (surveyAnswer.q4.a1 += 1) : surveyAnswer.q4.a1;
     } else if (obj.is('minus-attendee')) {
       // Decrease attendee by 1
-      surveyAnswer.q4.a1 = surveyAnswer.q4.a1 > 0 ?  surveyAnswer.q4.a1 -= 1 : 0;
+      surveyAnswer.q4.a1 =
+        surveyAnswer.q4.a1 > 0 ? (surveyAnswer.q4.a1 -= 1) : 0;
     } else if (obj.is('add-vegan')) {
       // Increase vegan by 1
-      surveyAnswer.q4.a2 = surveyAnswer.q4.a2 < surveyAnswer.q4.a1 ? surveyAnswer.q4.a2 += 1 : surveyAnswer.q4.a2;
+      surveyAnswer.q4.a2 =
+        surveyAnswer.q4.a2 < surveyAnswer.q4.a1
+          ? (surveyAnswer.q4.a2 += 1)
+          : surveyAnswer.q4.a2;
     } else if (obj.is('minus-vegan')) {
       // Decrease vegan by 1
-      surveyAnswer.q4.a2 = surveyAnswer.q4.a2 > 0 ?  surveyAnswer.q4.a2 -= 1 : 0;
+      surveyAnswer.q4.a2 =
+        surveyAnswer.q4.a2 > 0 ? (surveyAnswer.q4.a2 -= 1) : 0;
     } else if (obj.is('add-chair')) {
       // Increase children chair by 1
-      surveyAnswer.q4.a3 = surveyAnswer.q4.a3 < (surveyAnswer.q4.a1 - 1) ? surveyAnswer.q4.a3 += 1 : surveyAnswer.q4.a3;
+      surveyAnswer.q4.a3 =
+        surveyAnswer.q4.a3 < surveyAnswer.q4.a1 - 1
+          ? (surveyAnswer.q4.a3 += 1)
+          : surveyAnswer.q4.a3;
     } else if (obj.is('minus-chair')) {
       // Decrease children chair by 1
-      surveyAnswer.q4.a3 = surveyAnswer.q4.a3 > 0 ?  surveyAnswer.q4.a3 -= 1 : 0;
+      surveyAnswer.q4.a3 =
+        surveyAnswer.q4.a3 > 0 ? (surveyAnswer.q4.a3 -= 1) : 0;
     }
   });
 
@@ -485,7 +543,7 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
       return;
     }
     const currentTime = time();
-    if ((mario.lastCollide + 2) >= currentTime && mario.lastCollide !== null) {
+    if (mario.lastCollide + 2 >= currentTime && mario.lastCollide !== null) {
       return;
     }
     if (side.isBottom()) {
@@ -510,7 +568,7 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
       return;
     }
     const currentTime = time();
-    if ((mario.lastCollide + 2) >= currentTime && mario.lastCollide !== null) {
+    if (mario.lastCollide + 2 >= currentTime && mario.lastCollide !== null) {
       return;
     }
     if (side.isBottom()) {
@@ -530,7 +588,7 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
           // Get sick
           mario.sick();
         }
-      }  else if ((side.isLeft() || side.isRight()) && t.isShell) {
+      } else if ((side.isLeft() || side.isRight()) && t.isShell) {
         // Pump into shell from left or right
         t.slide(mario.pos.x < t.pos.x ? 1 : -1);
       }
@@ -542,7 +600,12 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
   // Go into Pipe
   mario.onCollide('pipe', (pipe: any) => {
     collidePipe$.next();
-    function enterPipe(currentLevel: string, score: any, isBig: boolean, surveyAnswer: SurveyAnswer): void {
+    function enterPipe(
+      currentLevel: string,
+      score: any,
+      isBig: boolean,
+      surveyAnswer: SurveyAnswer
+    ): void {
       switch (currentLevel) {
         case 'q1': {
           // Option A
@@ -609,7 +672,7 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
             surveyAnswer.q5 = 'B';
           } else if (pipe.is('pipe-c')) {
             // Option C
-            surveyAnswer.q5  = 'C';
+            surveyAnswer.q5 = 'C';
           }
           endGameSignal$.next(scoreLabel.value);
         }
@@ -619,10 +682,12 @@ export function addCharacter(currentLevel: string, initBig: boolean, initX: numb
       switchLevel$.next();
       enterPipe(currentLevel, scoreLabel.value, isBig, surveyAnswer);
     });
-    downTouch$.pipe(take(1), takeUntil(collidePipe$), takeUntil(switchLevel$)).subscribe(() => {
-      switchLevel$.next();
-      enterPipe(currentLevel, scoreLabel.value, isBig, surveyAnswer);
-    })
+    downTouch$
+      .pipe(take(1), takeUntil(collidePipe$), takeUntil(switchLevel$))
+      .subscribe(() => {
+        switchLevel$.next();
+        enterPipe(currentLevel, scoreLabel.value, isBig, surveyAnswer);
+      });
   });
 
   /***

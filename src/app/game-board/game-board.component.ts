@@ -1,15 +1,21 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { getSpriteConfig } from '../shared/sprite-mapping';
-import { maps } from '../shared/map';
-import { loadSprites } from './../shared/sprite-mapping';
-import { addCharacter, loadCharacter, registerTouchEvent } from '../shared/character';
-import { loadEvilMushroom } from './../shared/evil-shroom';
-import { loadTurtle } from './../shared/turtle';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { R3TargetBinder } from '@angular/compiler';
 import * as moment from 'moment';
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  addCharacter,
+  loadCharacter,
+  registerTouchEvent,
+} from '../shared/character';
+
+import { R3TargetBinder } from '@angular/compiler';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { getSpriteConfig } from '../shared/sprite-mapping';
+import { loadEvilMushroom } from './../shared/evil-shroom';
+import { loadSprites } from './../shared/sprite-mapping';
+import { loadTurtle } from './../shared/turtle';
+import { maps } from '../shared/map';
+import { takeUntil } from 'rxjs/operators';
 
 declare const origin: any;
 
@@ -48,23 +54,22 @@ export interface GameOption {
 }
 
 export interface SurveyAnswer {
-  q1: 'A' | 'B' | null,
-  q2: 'A' | 'B' | 'C' | 'D' | 'E' | null,
-  q3: 'A' | 'B' | null,
+  q1: 'A' | 'B' | null;
+  q2: 'A' | 'B' | 'C' | 'D' | 'E' | null;
+  q3: 'A' | 'B' | null;
   q4: {
-    a1: number,
-    a2: number,
-    a3: number
-  },
-  q5: 'A' | 'B' | 'C' | null
+    a1: number;
+    a2: number;
+    a3: number;
+  };
+  q5: 'A' | 'B' | 'C' | null;
 }
 @Component({
   selector: 'app-game-board',
   templateUrl: './game-board.component.html',
-  styleUrls: ['./game-board.component.scss']
+  styleUrls: ['./game-board.component.scss'],
 })
 export class GameBoardComponent implements OnInit, OnDestroy {
-
   isTouch = false;
   music: HTMLAudioElement | null = null;
   muted = true;
@@ -81,9 +86,9 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     q4: {
       a1: 0,
       a2: 0,
-      a3: 0
+      a3: 0,
     },
-    q5: null
+    q5: null,
   };
 
   endGameSignal$ = new Subject<number>();
@@ -94,7 +99,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   q4Trigger = {
     q41: false,
     q42: false,
-    q43: false
+    q43: false,
   };
 
   startTime: moment.Moment | null = null;
@@ -106,7 +111,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     down: false,
   };
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.init();
@@ -131,9 +136,9 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   // Init game board
   init(): void {
-    if (window.matchMedia("(pointer: coarse)").matches) {
+    if (window.matchMedia('(pointer: coarse)').matches) {
       this.isTouch = true;
-      if (window.matchMedia("(orientation: landscape)").matches) {
+      if (window.matchMedia('(orientation: landscape)').matches) {
         kaboom({
           width: window.innerWidth,
           height: window.innerHeight,
@@ -168,7 +173,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
           layer('bg'),
           pos(vec2(500, floor)),
           origin('botleft'),
-          scale(BASE_SCALE / 3)
+          scale(BASE_SCALE / 3),
         ]);
 
         add([
@@ -176,7 +181,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
           layer('bg'),
           pos(vec2(1600, floor)),
           origin('botleft'),
-          scale(BASE_SCALE / 3)
+          scale(BASE_SCALE / 3),
         ]);
         break;
       }
@@ -186,7 +191,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
           layer('bg'),
           pos(vec2(400, floor)),
           origin('botleft'),
-          scale(BASE_SCALE * 0.8)
+          scale(BASE_SCALE * 0.8),
         ]);
 
         add([
@@ -194,7 +199,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
           layer('bg'),
           pos(vec2(2000, floor)),
           origin('botleft'),
-          scale(BASE_SCALE / 3 * 0.8)
+          scale((BASE_SCALE / 3) * 0.8),
         ]);
         break;
       }
@@ -204,7 +209,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
           layer('bg'),
           pos(vec2(200, floor)),
           origin('botleft'),
-          scale(BASE_SCALE / 3)
+          scale(BASE_SCALE / 3),
         ]);
 
         add([
@@ -212,7 +217,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
           layer('bg'),
           pos(vec2(2400, floor)),
           origin('botleft'),
-          scale(BASE_SCALE / 3)
+          scale(BASE_SCALE / 3),
         ]);
         break;
       }
@@ -222,14 +227,14 @@ export class GameBoardComponent implements OnInit, OnDestroy {
           layer('bg'),
           pos(vec2(600, floor)),
           origin('botleft'),
-          scale(BASE_SCALE * 0.8)
+          scale(BASE_SCALE * 0.8),
         ]);
         add([
           sprite('mountain'),
           layer('bg'),
           pos(vec2(3000, floor)),
           origin('botleft'),
-          scale(BASE_SCALE / 3)
+          scale(BASE_SCALE / 3),
         ]);
 
         break;
@@ -240,7 +245,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
           layer('bg'),
           pos(vec2(1100, floor)),
           origin('botleft'),
-          scale(BASE_SCALE / 3)
+          scale(BASE_SCALE / 3),
         ]);
 
         add([
@@ -248,7 +253,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
           layer('bg'),
           pos(vec2(2700, floor)),
           origin('botleft'),
-          scale(BASE_SCALE / 3 * 0.8)
+          scale((BASE_SCALE / 3) * 0.8),
         ]);
 
         break;
@@ -257,22 +262,27 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   }
 
   addGameScene(): void {
-    if (window.matchMedia("(orientation: landscape) and (max-height: 767.5px)").matches) {
+    if (
+      window.matchMedia('(orientation: landscape) and (max-height: 767.5px)')
+        .matches
+    ) {
       document.documentElement.requestFullscreen();
     }
     scene('game', (gameConfig: GameOption) => {
       const labelFontSize = window.innerWidth < 750 ? 48 : 70;
       this.addLayer();
       this.scoreLabel = add([
-        text(String(gameConfig.score).padStart(3, '0'), { size: labelFontSize }),
+        text(String(gameConfig.score).padStart(3, '0'), {
+          size: labelFontSize,
+        }),
         scale(BASE_SCALE / 2),
         area(),
         pos(850, 150),
         fixed(),
         layer('ui'),
         {
-          value: gameConfig.score
-        }
+          value: gameConfig.score,
+        },
       ]);
       this.score = gameConfig.score;
       const scoreXPos = width() - this.scoreLabel.width - 10;
@@ -282,9 +292,20 @@ export class GameBoardComponent implements OnInit, OnDestroy {
       const map = maps[gameConfig.level];
       this.gameBoard = addLevel(map, config);
       this.addGameBg(gameConfig.level);
-      const player = addCharacter(gameConfig.level, gameConfig.isBig, 1000, 0, this.gameBoard, this.scoreLabel, this.moveDir, this.SurveyAnswers, this.q4Status$, this.endGameSignal$);
+      const player = addCharacter(
+        gameConfig.level,
+        gameConfig.isBig,
+        1000,
+        0,
+        this.gameBoard,
+        this.scoreLabel,
+        this.moveDir,
+        this.SurveyAnswers,
+        this.q4Status$,
+        this.endGameSignal$
+      );
 
-      this.q4Status$.pipe(takeUntil(this.onDestroy$)).subscribe(state => {
+      this.q4Status$.pipe(takeUntil(this.onDestroy$)).subscribe((state) => {
         switch (state) {
           case 'q4-1-start': {
             this.q4Trigger.q41 = true;
@@ -317,34 +338,34 @@ export class GameBoardComponent implements OnInit, OnDestroy {
           drawSprite({
             sprite: 'q4-1',
             pos: vec2(2480, 270),
-            width: 150
+            width: 150,
           });
           drawText({
             text: this.SurveyAnswers.q4.a1.toString(),
             size: 48,
-            pos: vec2(2680, 270)
+            pos: vec2(2680, 270),
           });
         } else if (gameConfig.level === 'q42' && this.q4Trigger.q42) {
           drawSprite({
             sprite: 'q4-2',
             pos: vec2(1900, 280),
-            width: 150
+            width: 150,
           });
           drawText({
             text: this.SurveyAnswers.q4.a2.toString(),
             size: 48,
-            pos: vec2(2100, 280)
+            pos: vec2(2100, 280),
           });
         } else if (gameConfig.level === 'q43' && this.q4Trigger.q43) {
           drawSprite({
             sprite: 'q4-3',
             pos: vec2(2100, 300),
-            width: 150
+            width: 150,
           });
           drawText({
             text: this.SurveyAnswers.q4.a3.toString(),
             size: 48,
-            pos: vec2(2300, 300)
+            pos: vec2(2300, 300),
           });
         }
       });
@@ -352,26 +373,33 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   }
 
   regEndGame(): void {
-    this.endGameSignal$.pipe(takeUntil(this.onDestroy$)).subscribe((finalScore) => {
-      const finishTime = moment();
-      const duration = moment.duration(finishTime.diff(this.startTime));
-      sessionStorage.setItem('duration', Math.floor(duration.asSeconds()).toString());
+    this.endGameSignal$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((finalScore) => {
+        const finishTime = moment();
+        const duration = moment.duration(finishTime.diff(this.startTime));
+        sessionStorage.setItem(
+          'duration',
+          Math.floor(duration.asSeconds()).toString()
+        );
 
-      this.score = finalScore;
+        this.score = finalScore;
 
-      // Add time bonus score
-      const timeBonus = Math.floor(100 * (120 / Math.floor(duration.asSeconds())));
-      this.score += timeBonus;
+        // Add time bonus score
+        const timeBonus = Math.floor(
+          100 * (120 / Math.floor(duration.asSeconds()))
+        );
+        this.score += timeBonus;
 
-      // localStorage.setItem('gameAnswer', JSON.stringify(this.SurveyAnswers));
-      // // Update highest score
-      // const lastScore = localStorage.getItem('maxScore') || 0;
-      // if (this.score > +lastScore) {
-      //   localStorage.setItem('maxScore', this.score.toString());
-      // }
-      this.router.navigateByUrl('thankyou');
-      this.music?.pause();
-    });
+        // localStorage.setItem('gameAnswer', JSON.stringify(this.SurveyAnswers));
+        // // Update highest score
+        // const lastScore = localStorage.getItem('maxScore') || 0;
+        // if (this.score > +lastScore) {
+        //   localStorage.setItem('maxScore', this.score.toString());
+        // }
+        this.router.navigateByUrl('thankyou');
+        this.music?.pause();
+      });
   }
 
   // On user clicks on the arrow
